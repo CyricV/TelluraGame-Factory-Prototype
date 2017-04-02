@@ -6,7 +6,16 @@ public class Inventory {
     /// <summary>
     /// Number of slots in this inventory.
     /// </summary>
-    private int size;
+    private int size {
+        get; set;
+    }
+    //    get {
+    //        return size;
+    //    }
+    //    set {
+    //        size = value;
+    //    }
+    //}
 
     // Somehow specifies the types of items this inventory can accept
     // Filter?
@@ -19,7 +28,11 @@ public class Inventory {
     /// <summary>
     /// Number of current empty slots.
     /// </summary>
-    private int emptySlots;
+    private int emptySlots {
+        get {
+            return this.size-this.occupiedSlots;
+        }
+    }
 
     /// <summary>
     /// Number of non maxed stackable inventory slots.
@@ -32,26 +45,13 @@ public class Inventory {
     private int fullSlots;
     
     /// <summary>
-    /// Default Constructor. Inventory will have 1 empty slot.
-    /// </summary>
-    public Inventory() {
-        size            = 1;
-        //Filter
-        contents        =new InventoryContents(1);
-        emptySlots      = 1;
-        occupiedSlots   = 0;
-        fullSlots       = 0;
-    }
-    
-    /// <summary>
     /// Constructor with size.
     /// </summary>
-    /// <param name="sizeParam">INT Number of slots the inventory will have.</param>
-    public Inventory(int sizeParam) {
-        size            = sizeParam;
+    /// <param name="sizeParam">Number of slots the inventory will have.</param>
+    public Inventory(int sizeParam = 1) {
+        this.size       = sizeParam;
         //Filter
         contents        = new InventoryContents(sizeParam);
-        emptySlots      = 1;
         occupiedSlots   = 0;
         fullSlots       = 0;
     }
@@ -59,9 +59,9 @@ public class Inventory {
     /// <summary>
     /// Checks if all slots have max stacks.
     /// </summary>
-    /// <returns>BOOL True if the inventory is full. False if not.</returns>
+    /// <returns>True if the inventory is full. False if not.</returns>
     public bool isFull() {
-        if(fullSlots == this.size) {
+        if(this.fullSlots == this.size) {
             return true;
         }
         return false;
@@ -70,8 +70,8 @@ public class Inventory {
     /// <summary>
     /// Determines how many of a specified item is in the inventory.
     /// </summary>
-    /// <param name="id">INT Item id to look for.</param>
-    /// <returns>INT The number of specified item present in the inventory.</returns>
+    /// <param name="id">Item id to look for.</param>
+    /// <returns>The number of specified item present in the inventory.</returns>
     public int containsItem(int id) {
         int totalItems = 0;
         if (occupiedSlots > 0) {
@@ -88,8 +88,8 @@ public class Inventory {
     /// <summary>
     /// Attempts to add an amount of an item specified by id.
     /// </summary>
-    /// <param name="id">INT Item id to be added.</param>
-    /// <param name="amount">INT Number of items to attempt to add.</param>
+    /// <param name="id">Item id to be added.</param>
+    /// <param name="amount">Number of items to attempt to add.</param>
     /// <returns>The amount of items that were not able to be added.</returns> 
     public int addItem(int id, int amount) {
         // Invalid id check
@@ -149,6 +149,7 @@ public class Inventory {
     /// <param name="item">The item to be added.</param>
     /// <returns>The amount of items that were not able to be added.</returns>
     public int addItem(InventoryItem item) {
+        // BEHAVE DIFFERENT IF ITEM HAS "DATA" OF SOME KIND!!!!
         return addItem(item.getID(), item.getStackCurrent());
     }
 
@@ -185,7 +186,7 @@ public class Inventory {
     }
 
     /// <summary>
-    /// Attempts to remove an amount of an item specified by id.
+    /// BROKEN Attempts to remove an amount of an item specified by id.
     /// </summary>
     /// <param name="id">INT Item id to be removed.</param>
     /// <param name="amount">INT Number of items to attempt to remove.</param>
@@ -223,24 +224,55 @@ public class Inventory {
         return returnItem;
     }
 
-    public int splitInventory() {
-        return 0;
-    }
+    public Inventory truncateInventory(int truncateBy) {
+        Inventory returnInventory       = new Inventory(truncateBy);
+        InventoryContents newContents   = new InventoryContents(this.size - truncateBy);
 
-    public void mergeInventory(Inventory consumedInventory) {
-
-    }
-
-    public void expandInventory(int addSize) {
-        InventoryContents newContents = new InventoryContents(this.size + addSize);
-        for (int i = 0; i < size; i++) {
+        // Create the return inventory
+        for (int i = this.size - truncateBy; i < this.size; i++) {
+            returnInventory.contents.contentsArray[i - (this.size - truncateBy)] = this.contents.contentsArray[i];
+        }
+        // Create the new contents array for this inventory
+        for (int i = 0; i < this.size - truncateBy; i++) {
             newContents.contentsArray[i] = this.contents.contentsArray[i];
         }
+        this.contents = newContents;
+        this.size -= truncateBy;
+        return returnInventory;
+    }
+
+    /// <summary>
+    /// Expands this inventory by the size of, and adds all the items of another inventory.
+    /// </summary>
+    /// <param name="consumedInventory">The inventory that will be added onto this one.</param>
+    public void mergeInventory(Inventory consumedInventory) {
+        int newSize = this.size + consumedInventory.size;
+        InventoryContents newContents = new InventoryContents(newSize);
+        for (int i = 0; i < this.size; i++) {
+            newContents.contentsArray[i] = this.contents.contentsArray[i];
+        }
+        for (int i = 0; i < consumedInventory.size; i++) {
+            newContents.contentsArray[i+this.size] = consumedInventory.contents.contentsArray[i];
+        }
+        this.contents = newContents;
+    }
+
+    /// <summary>
+    /// Adds a number of empty slots to the end of this inventory.
+    /// </summary>
+    /// <param name="addSize">Number of slots to add.</param>
+    public void expandInventory(int addSize) {
+        InventoryContents newContents = new InventoryContents(this.size + addSize);
+        for (int i = 0; i < this.size; i++) {
+            newContents.contentsArray[i] = this.contents.contentsArray[i];
+        }
+        this.size += addSize;
     }
 
     public int destroyInventory() {
         return 0;
     }
+
     public int DEBUGReportInventory() {
         string outString = "Inventory Report: \n";
         for (int i = 0; i<this.size; i++) {

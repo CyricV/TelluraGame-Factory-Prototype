@@ -5,33 +5,28 @@ using UnityEngine;
 // Basic storage vessel.
 public class DeviceChest : Device {
 
-    Inventory localBinContents;
-    Inventory sharedContents;
+    private Inventory   localChestContents;
+    private Inventory   sharedContents;
+    private bool        isMerged;
+    
+    private void chestLink() {
+        helloNeighbor();
+        for (int i = 0; i < 4; i++) {
+            DeviceChest currentNeighnor = this[i] as DeviceChest;
 
-    public DeviceChest(int x, int y) {
-        this.xGridPos = x;
-        this.yGridPos = y;
-        this.shortName = "chest";
-        // This will fail if there is alread an object on the grid at this location.
-        this.placeDevice(x, y);
-        localBinContents = new Inventory(8);
-        this.chestLinkCheck();
+        }
     }
 
-
-    private void chestLinkCheck() {
-        Device up       = BackstageActor.factoryGrid.getIndex(this.xGridPos, this.yGridPos + 1);
-        Device down     = BackstageActor.factoryGrid.getIndex(this.xGridPos, this.yGridPos - 1);
-        Device left     = BackstageActor.factoryGrid.getIndex(this.xGridPos - 1, this.yGridPos);
-        Device right    = BackstageActor.factoryGrid.getIndex(this.xGridPos + 1, this.yGridPos);
-
-
+    public bool getMerged() {
+        return this.isMerged;
     }
-
 
 	// Use this for initialization
 	void Start () {
-		
+        this.shortName = "chest";
+        localChestContents = new Inventory(8);
+        this.chestLink();
+        Debug.Log("Chest exists");
 	}
 	
 	// Update is called once per frame
