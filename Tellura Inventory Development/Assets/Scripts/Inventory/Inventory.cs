@@ -224,6 +224,11 @@ public class Inventory {
         return returnItem;
     }
 
+    /// <summary>
+    /// Splits the specified number of slots from the end of this inventory into a separate inventory.
+    /// </summary>
+    /// <param name="truncateBy">The number of slots to snip off this end of the inventory.</param>
+    /// <returns>A new inventory that contains the slots and items removed from this inventory.</returns>
     public Inventory truncateInventory(int truncateBy) {
         Inventory returnInventory       = new Inventory(truncateBy);
         InventoryContents newContents   = new InventoryContents(this.size - truncateBy);
@@ -273,14 +278,13 @@ public class Inventory {
         return 0;
     }
 
-    public int DEBUGReportInventory() {
+    public string DEBUGReportInventory() {
         string outString = "Inventory Report: \n";
         for (int i = 0; i<this.size; i++) {
             outString += ("\t" + i.ToString() + "\t");
             if(this.contents.contentsArray[i] == null) outString += ("Empty\n");
             else outString += (this.contents.contentsArray[i].getStackCurrent() + " " + this.contents.contentsArray[i].getName() + "\n");
         }
-        Debug.Log(outString);
-        return 0;
+        return outString;
     }
 }
