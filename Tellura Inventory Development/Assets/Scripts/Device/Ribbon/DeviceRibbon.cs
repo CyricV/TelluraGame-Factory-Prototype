@@ -11,6 +11,7 @@ public class DeviceRibbon : Device {
     GameObject partDown;
     GameObject partLeft;
     GameObject partRight;
+    public RibbonNode node;
 
 	// Use this for initialization
 	void Start () {

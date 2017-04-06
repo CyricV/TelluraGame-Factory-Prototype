@@ -9,13 +9,8 @@ public class Inventory {
     private int size {
         get; set;
     }
-    //    get {
-    //        return size;
-    //    }
-    //    set {
-    //        size = value;
-    //    }
-    //}
+
+    public RibbonNode node;
 
     // Somehow specifies the types of items this inventory can accept
     // Filter?
