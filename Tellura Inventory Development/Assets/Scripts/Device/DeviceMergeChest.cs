@@ -33,7 +33,6 @@ public class DeviceMergeChest : Device {
 
 	// Use this for initialization
 	void Start () {
-        this.shortName = "chest_merge";
         localChestContents = new Inventory(8);
         this.chestLink();
 	}

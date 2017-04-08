@@ -10,8 +10,11 @@ public class DeviceChest : Device {
 
 	private void Awake () {
         gameObject.name     = "Chest " + gameObject.GetInstanceID();
-        shortName           = "chest";
         chestContents       = new Inventory(8);
+        enableUp        = true;
+        enableDown      = true;
+        enableLeft      = true;
+        enableRight     = true;
 	}
 
     private void Start() {

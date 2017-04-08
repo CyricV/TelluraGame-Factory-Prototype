@@ -9,6 +9,10 @@ public class DeviceKiln : Device {
 	private void Awake () {
         gameObject.name = "Kiln " + gameObject.GetInstanceID();
         input           = new Inventory(1);
+        enableUp        = true;
+        enableDown      = false;
+        enableLeft      = false;
+        enableRight     = false;
 	}
 
     private void Start() {

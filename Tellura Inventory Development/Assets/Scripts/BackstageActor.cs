@@ -71,12 +71,26 @@ public class BackstageActor : MonoBehaviour {
         makeRibbon(4, 2);
         makeRibbon(4, 1);
 
+        makeRibbon(-1, -1);
+        makeRibbon(0, -1);
+        makeRibbon(1, -1);
+        makeRibbon(2, -1);
+        makeRibbon(3, -1);
+        GameObject ribbo = makeRibbon(4, -1);
+        for (int x = 0; x<10; x++) {
+            for (int y = -1; y>-4; y--) {
+                makeRibbon(x, y);
+            }
+        }
+        ribbo.GetComponent<DeviceRibbon>().enableDown = false;
+        ribbo.GetComponent<DeviceRibbon>().enableRight = false;
     }
     
     void Update() {
     }
 
     public GameObject makeRibbon(int x, int y) {
+        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward)) return null;
         return Instantiate(ribbon_PF, new Vector3(x, y, 0), Quaternion.identity);;
     }
 

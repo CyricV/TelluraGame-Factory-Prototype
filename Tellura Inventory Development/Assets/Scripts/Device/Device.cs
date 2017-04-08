@@ -3,17 +3,53 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Device : MonoBehaviour {
-    protected string    shortName;
+    protected bool      _enableUp;
+    protected bool      _enableDown;
+    protected bool      _enableLeft;
+    protected bool      _enableRight;
+    
+    public virtual bool enableUp {
+        get {
+            return _enableUp;
+        }
+        set {
+            _enableUp = value;
+        }
+    }
+    public virtual bool enableDown {
+        get {
+            return _enableDown;
+        }
+        set {
+            _enableDown = value;
+        }
+    }
+    public virtual bool enableLeft {
+        get {
+            return _enableLeft;
+        }
+        set {
+            _enableLeft = value;
+        }
+    }
+    public virtual bool enableRight {
+        get {
+            return _enableRight;
+        }
+        set {
+            _enableRight = value;
+        }
+    }
 
     protected Device    upNeighbor;
     protected Device    downNeighbor;
     protected Device    leftNeighbor;
     protected Device    rightNeighbor;
 
-    public RibbonNode upNode;
-    public RibbonNode downNode;
-    public RibbonNode leftNode;
-    public RibbonNode rightNode;
+    public RibbonNode   upNode;
+    public RibbonNode   downNode;
+    public RibbonNode   leftNode;
+    public RibbonNode   rightNode;
 
     protected Device this[int i] {
         get {
@@ -29,9 +65,6 @@ public class Device : MonoBehaviour {
             }
             return null;
         }
-    }
-
-    void Start() {
     }
 
     /// <summary>
