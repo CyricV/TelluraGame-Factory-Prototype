@@ -11,65 +11,48 @@ public class DeviceRibbon : Device {
     GameObject partDown;
     GameObject partLeft;
     GameObject partRight;
-    public RibbonNode node;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake() {
+        gameObject.name = "Ribbon " + gameObject.GetInstanceID();
         enableUp        = true;
         enableDown      = true;
         enableLeft      = true;
         enableRight     = true;
+    }
+    
+	void Start () {
+        helloNeighbor();
 
-        this.helloNeighbor();
-        if(this.upNeighbor != null && enableUp) {
-            makeUpPart();
+        string loadName;
+        if(upNeighbor != null && enableUp) {
+            loadName = "Prefabs/RibbonPartConnector";
+            if (upNeighbor is DeviceRibbon) loadName = "Prefabs/RibbonPart";
+                partUp = makePart("ribbon_up " + gameObject.GetInstanceID(), loadName, Quaternion.identity);
         }
-        if(this.downNeighbor != null && enableDown) {
-            makeDownPart();
+        if(downNeighbor != null && enableDown) {
+            loadName = "Prefabs/RibbonPartConnector";
+            print(downNeighbor.GetType() + downNeighbor.gameObject.name);
+            if (downNeighbor is DeviceRibbon) loadName = "Prefabs/RibbonPart";
+            partDown = makePart("ribbon_down " + gameObject.GetInstanceID(), loadName, Quaternion.Euler(0, 0, 180));
         }
-        if(this.leftNeighbor != null && enableLeft) {
-            makeLeftPart();
+        if(leftNeighbor != null && enableLeft) {
+            loadName = "Prefabs/RibbonPartConnector";
+            if (leftNeighbor is DeviceRibbon) loadName = "Prefabs/RibbonPart";
+            partLeft = makePart("ribbon_left " + gameObject.GetInstanceID(), loadName, Quaternion.Euler(0, 0, 90));
         }
-        if(this.rightNeighbor != null && enableRight) {
-            makeRightPart();
+        if(rightNeighbor != null && enableRight) {
+            loadName = "Prefabs/RibbonPartConnector";
+            if (rightNeighbor is DeviceRibbon) loadName = "Prefabs/RibbonPart";
+            partRight = makePart("ribbon_right " + gameObject.GetInstanceID(), loadName, Quaternion.Euler(0, 0, 270));
         }
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
-    private void makeUpPart() {
-        GameObject part                                 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        part.transform.position                         = gameObject.transform.position + new Vector3(0.0f, 0.25f, 0.0f);
-        part.transform.localScale                       = new Vector3(0.09f, 0.5f, 0.09f);
-        part.GetComponent<Renderer>().material.color    = new Color(0.02f, 0.02f, 0.02f);
-        part.name                                       = "ribbon_up";
-        this.partUp                                     = part;
-    }
-    private void makeDownPart() {
-        GameObject part                                 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        part.transform.position                         = gameObject.transform.position + new Vector3(0.0f, -0.25f, 0.0f);
-        part.transform.localScale                       = new Vector3(0.09f, 0.5f, 0.09f);
-        part.GetComponent<Renderer>().material.color    = new Color(0.02f, 0.02f, 0.02f);
-        part.name                                       = "ribbon_down";
-        this.partDown                                   = part;
-    }
-    private void makeLeftPart() {
-        GameObject part                                 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        part.transform.position                         = gameObject.transform.position + new Vector3(-0.25f, 0.0f, 0.0f);
-        part.transform.localScale                       = new Vector3(0.5f, 0.09f, 0.09f);
-        part.GetComponent<Renderer>().material.color    = new Color(0.02f, 0.02f, 0.02f);
-        part.name                                       = "ribbon_left";
-        this.partLeft                                   = part;
-    }
-    private void makeRightPart() {
-        GameObject part                                 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        part.transform.position                         = gameObject.transform.position + new Vector3(0.25f, 0.0f, 0.0f);
-        part.transform.localScale                       = new Vector3(0.5f, 0.09f, 0.09f);
-        part.GetComponent<Renderer>().material.color    = new Color(0.02f, 0.02f, 0.02f);
-        part.name                                       = "ribbon_right";
-        this.partRight                                  = part;
+    protected GameObject makePart(string name, string loadName, Quaternion rotation) {
+        GameObject part = Instantiate(
+                            Resources.Load(loadName) as GameObject,
+                            gameObject.transform.position,
+                            rotation);
+        part.name       = name;
+        return part;
     }
 }

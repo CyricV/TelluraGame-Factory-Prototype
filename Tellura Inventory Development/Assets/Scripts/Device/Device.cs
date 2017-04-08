@@ -10,6 +10,11 @@ public class Device : MonoBehaviour {
     protected Device    leftNeighbor;
     protected Device    rightNeighbor;
 
+    public RibbonNode upNode;
+    public RibbonNode downNode;
+    public RibbonNode leftNode;
+    public RibbonNode rightNode;
+
     protected Device this[int i] {
         get {
             switch (i) {
@@ -17,13 +22,16 @@ public class Device : MonoBehaviour {
                 case (1): return this.downNeighbor;
                 case (2): return this.leftNeighbor;
                 case (3): return this.rightNeighbor;
+                //case (4): return this.upNode;
+                //case (5): return this.downNode;
+                //case (6): return this.leftNode;
+                //case (7): return this.rightNode;
             }
             return null;
         }
     }
 
-    public string getShortName() {
-        return this.shortName;
+    void Start() {
     }
 
     /// <summary>
@@ -45,25 +53,25 @@ public class Device : MonoBehaviour {
             if (Physics.Raycast(upOrigin, Vector3.forward, out currentHit)) {
                 //currentHit.transform.gameObject.layer; // Might need this for only targeting devices i.e. when the player is in front of a device
                 this.upNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
-                if (isResponse) this.upNeighbor.helloNeighbor(false, true, false, false, true);
+                if (!isResponse) this.upNeighbor.helloNeighbor(false, true, false, false, true);
             }
         }
         if (down) {
             if (Physics.Raycast(downOrigin, Vector3.forward, out currentHit)) {
                 this.downNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
-                if (isResponse) this.downNeighbor.helloNeighbor(true, false, false, false, true);
+                if (!isResponse) this.downNeighbor.helloNeighbor(true, false, false, false, true);
             }
         }
         if (left) {
             if (Physics.Raycast(leftOrigin, Vector3.forward, out currentHit)) {
                 this.leftNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
-                if (isResponse) this.leftNeighbor.helloNeighbor(false, false, false, true, true);
+                if (!isResponse) this.leftNeighbor.helloNeighbor(false, false, false, true, true);
             }
         }
         if (right) {
             if (Physics.Raycast(rightOrigin, Vector3.forward, out currentHit)) {
                 this.rightNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
-                if (isResponse) this.rightNeighbor.helloNeighbor(false, false, true, false, true);
+                if (!isResponse) this.rightNeighbor.helloNeighbor(false, false, true, false, true);
             }
         }
     }
@@ -71,5 +79,18 @@ public class Device : MonoBehaviour {
     // Attempts to place all item's in this device's inventories as well as the device into a target inventory.
     public void pickUpDevice(Inventory targetInventory) {
 
+    }
+
+    public string DEBUGReportNeighbors() {
+        string upName                           = "null";
+        string downName                         = "null";
+        string leftName                         = "null";
+        string rightName                        = "null";
+        if (upNeighbor != null) upName          = upNeighbor.name;
+        if (downNeighbor != null) downName      = downNeighbor.name;
+        if (leftNeighbor != null) leftName      = leftNeighbor.name;
+        if (rightNeighbor != null) rightName    = rightNeighbor.name;
+
+        return ("UP: " + upName + ", DOWN: " + downName + ", LEFT: " + leftName + ", RIGHT: " + rightName);
     }
 }

@@ -9,12 +9,13 @@ public class DeviceChest : Device {
     public Inventory chestContents;
 
 	private void Awake () {
-        this.shortName      = "chest";
-        this.chestContents  = new Inventory(8);
+        gameObject.name     = "Chest " + gameObject.GetInstanceID();
+        shortName           = "chest";
+        chestContents       = new Inventory(8);
 	}
 
     private void Start() {
-        this.helloNeighbor();
+        helloNeighbor();
     }
 
     // Update is called once per frame

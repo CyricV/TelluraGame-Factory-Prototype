@@ -9,8 +9,15 @@ public class BackstageActor : MonoBehaviour {
     //public Device[] deviceMasterList = new Device[1];
     public static InventoryItemMasterList masterList;
 
+    //Prefabs
+    public GameObject chest_PF;
+    public GameObject kiln_PF;
+    public GameObject ribbon_PF;
+    public GameObject ribbonPart_PF;
+
 
 	void Start () {
+
         masterList = new InventoryItemMasterList();
 
         string stringItemMasterList = "Item Master List:\n";
@@ -50,49 +57,39 @@ public class BackstageActor : MonoBehaviour {
 
 
         // device testing
-        GameObject chest1 = testMakeChest(0, 0);
-        GameObject chest2 = testMakeChest(1, 0);
+
+        GameObject chest1 = Instantiate(chest_PF, new Vector3(0,0,0), Quaternion.identity);
+        GameObject chest2 = Instantiate(chest_PF, new Vector3(1,0,0), Quaternion.identity);
         chest1.GetComponent<DeviceChest>().chestContents.addItem(0, 100);
         print(chest1.GetComponent<DeviceChest>().chestContents.DEBUGReportInventory());
-        testMakeKiln(4, 0);
+        makeKiln(4, 0);
 
-        testMakeRibbon(1, 1);
-        testMakeRibbon(1, 2);
-        testMakeRibbon(2, 2);
-        testMakeRibbon(3, 2);
-        testMakeRibbon(4, 2);
-        testMakeRibbon(4, 1);
+        makeRibbon(1, 1);
+        makeRibbon(1, 2);
+        makeRibbon(2, 2);
+        makeRibbon(3, 2);
+        makeRibbon(4, 2);
+        makeRibbon(4, 1);
 
     }
     
     void Update() {
     }
 
-    public GameObject testMakeChest(int x, int y) {
-        GameObject chest                                    = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        chest.transform.position                            = new Vector3(x, y, 0);
-        chest.transform.localScale                          = new Vector3(0.6f, 0.6f, 0.6f);
-        chest.GetComponent<Renderer>().material.color       = new Color(0.82f, 0.41f, 0.11f);
-        chest.name                                          = "Chest";
-        chest.AddComponent<DeviceChest>();
-        return chest;
+    public GameObject makeRibbon(int x, int y) {
+        return Instantiate(ribbon_PF, new Vector3(x, y, 0), Quaternion.identity);;
     }
 
-    public void testMakeKiln(int x, int y) {
-        GameObject kiln                                     = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        kiln.transform.position                             = new Vector3(x, y, 0);
-        kiln.GetComponent<Renderer>().material.color        = new Color(1.0f, 0.1f, 0.1f);
-        kiln.name                                           = "Kiln";
-        kiln.transform.localScale                           = new Vector3(0.6f, 0.9f, 0.6f);
-        kiln.AddComponent<DeviceKiln>();
+    public GameObject makeKiln(int x, int y) {
+        return Instantiate(kiln_PF, new Vector3(x, y, 0), Quaternion.identity);
     }
-    
-    public void testMakeRibbon(int x, int y) {
-        GameObject ribbon                                   = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        ribbon.transform.position                           = new Vector3(x, y, 0);
-        ribbon.GetComponent<Renderer>().material.color      = new Color(0.02f, 0.02f, 0.02f);
-        ribbon.name                                         = "Kiln";
-        ribbon.transform.localScale                         = new Vector3(0.1f, 0.1f, 0.1f);
-        ribbon.AddComponent<DeviceRibbon>();
+
+    public void testDrawGrid(Vector3 start, int xSize, int ySize, float duration = 99f) {
+        for (int x = 0; x < xSize; x++) {
+            Debug.DrawRay(start + new Vector3(x, 0, 0), Vector3.down, Color.green, duration, false);
+        }
+        for (int y = 0; y < xSize; y++) {
+            Debug.DrawRay(start - new Vector3(y, 0, 0), Vector3.right, Color.green, duration, false);
+        }
     }
 }

@@ -10,8 +10,6 @@ public class Inventory {
         get; set;
     }
 
-    public RibbonNode node;
-
     // Somehow specifies the types of items this inventory can accept
     // Filter?
     
