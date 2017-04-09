@@ -123,7 +123,16 @@ public class Device : MonoBehaviour {
         if (downNeighbor != null) downName      = downNeighbor.name;
         if (leftNeighbor != null) leftName      = leftNeighbor.name;
         if (rightNeighbor != null) rightName    = rightNeighbor.name;
+        if (!_enableUp) upName                  = "(X)"+upName;
+        if (!_enableDown) downName              = "(X)"+downName;
+        if (!_enableLeft) leftName              = "(X)"+leftName;
+        if (!_enableRight) rightName            = "(X)"+rightName;
 
-        return ("UP: " + upName + ", DOWN: " + downName + ", LEFT: " + leftName + ", RIGHT: " + rightName);
+        return (
+            gameObject.name + " NEIGHBORS\n" +
+                "\tUP: \t" + upName +
+                "\n\tDOWN: \t" + downName +
+                "\n\tLEFT: \t" + leftName + 
+                "\n\tRIGHT: \t" + rightName);
     }
 }

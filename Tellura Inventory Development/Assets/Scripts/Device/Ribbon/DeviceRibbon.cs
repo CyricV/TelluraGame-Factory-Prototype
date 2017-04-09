@@ -13,12 +13,13 @@ public class DeviceRibbon : Device {
             return _enableUp;
         }
         set {
-            if (value && !_enableUp && upNeighbor is Device) {
-                makePart("up");
+            if (value && partUp == null && upNeighbor is Device) {
+                _enableUp = value;
+                partUp = makePart("up");
             } else if (!value) {
+                _enableUp = value;
                 removePart("up");
-            }
-            _enableUp = value;
+            } else _enableUp = value;
         }
     }
     public override bool enableDown {
@@ -26,13 +27,13 @@ public class DeviceRibbon : Device {
             return _enableDown;
         }
         set {
-            if (value && !_enableDown && downNeighbor is Device) {
-                makePart("down");
+            if (value && partDown == null && downNeighbor is Device) {
+                _enableDown = value;
+                partDown = makePart("down");
             } else if (!value) {
-                print("butts");
+                _enableDown = value;
                 removePart("down");
-            }
-            _enableDown = value;
+            } else _enableDown = value;
         }
     }
     public override bool enableLeft {
@@ -40,12 +41,13 @@ public class DeviceRibbon : Device {
             return _enableLeft;
         }
         set {
-            if (value && !_enableLeft && leftNeighbor is Device) {
-                makePart("left");
+            if (value && partLeft == null && leftNeighbor is Device) {
+                _enableLeft = value;
+                partLeft = makePart("left");
             } else if (!value) {
+                _enableLeft = value;
                 removePart("left");
-            }
-            _enableLeft = value;
+            } else _enableLeft = value;
         }
     }
     public override bool enableRight {
@@ -53,38 +55,28 @@ public class DeviceRibbon : Device {
             return _enableRight;
         }
         set {
-            if (value && !_enableRight && rightNeighbor is Device) {
-                makePart("right");
+            if (value && partRight == null && rightNeighbor is Device) {
+                _enableRight = value;
+                partRight = makePart("right");
             } else if (!value) {
+                _enableRight = value;
                 removePart("right");
-            }
-            _enableRight = value;
+            } else _enableRight = value;
         }
     }
 
     RibbonNode node;
-    
-	void Start () {
+
+    private void Awake() {
         gameObject.name = "Ribbon " + gameObject.GetInstanceID();
+        helloNeighbor();
         enableUp        = true;
         enableDown      = true;
         enableLeft      = true;
         enableRight     = true;
-
-        helloNeighbor();
-
-        if(upNeighbor != null && enableUp) {
-            partUp = makePart("up");
-        }
-        if(downNeighbor != null && enableDown) {
-            partDown = makePart("down");
-        }
-        if(leftNeighbor != null && enableLeft) {
-            partLeft = makePart("left");
-        }
-        if(rightNeighbor != null && enableRight) {
-            partRight = makePart("right");
-        }
+    }
+    
+	void Start () {
 	}
 
     public GameObject makePart(string rotation, bool respond = true) {
@@ -106,6 +98,7 @@ public class DeviceRibbon : Device {
             loadName            = "Prefabs/RibbonPartConnector";
             if (downNeighbor is DeviceRibbon) {
                 loadName        = "Prefabs/RibbonPart";
+
                 if (respond) (downNeighbor as DeviceRibbon).makePart("up", false);
             }
         } else if (rotation == "left" && leftNeighbor.enableRight) {
@@ -131,23 +124,30 @@ public class DeviceRibbon : Device {
                         gameObject.transform.position,
                         Quaternion.Euler(0, 0, z));
         part.name       = name;
+
+        if (rotation == "up") partUp            = part;
+        else if (rotation == "down") partDown   = part;
+        else if (rotation == "left") partLeft   = part;
+        else if (rotation == "right") partRight = part;
         return part;
     }
 
     private void removePart(string target, bool respond = true) {
         if (target == "up") {
             Destroy(partUp);
+            partUp = null;
             if (respond && upNeighbor is DeviceRibbon) (upNeighbor as DeviceRibbon).removePart("down", false);
         } else if (target == "down") {
-            print("destroy "+partDown.name);
-            partDown.name = "DELETE ME";
             Destroy(partDown);
+            partDown = null;
             if (respond && downNeighbor is DeviceRibbon) (downNeighbor as DeviceRibbon).removePart("up", false);
         } else if (target == "left") {
             Destroy(partLeft);
+            partLeft = null;
             if (respond && leftNeighbor is DeviceRibbon) (leftNeighbor as DeviceRibbon).removePart("right", false);
         } else if (target == "right") {
             Destroy(partRight);
+            partRight= null;
             if (respond && rightNeighbor is DeviceRibbon) (rightNeighbor as DeviceRibbon).removePart("left", false);
         }
     }

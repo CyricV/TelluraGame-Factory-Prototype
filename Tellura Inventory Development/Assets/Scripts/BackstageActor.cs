@@ -58,32 +58,29 @@ public class BackstageActor : MonoBehaviour {
 
         // device testing
 
-        GameObject chest1 = Instantiate(chest_PF, new Vector3(0,0,0), Quaternion.identity);
-        GameObject chest2 = Instantiate(chest_PF, new Vector3(1,0,0), Quaternion.identity);
+        GameObject chest1 = makeChest(0, 0);
+        GameObject chest2 = makeChest(1, 0);
         chest1.GetComponent<DeviceChest>().chestContents.addItem(0, 100);
         print(chest1.GetComponent<DeviceChest>().chestContents.DEBUGReportInventory());
+
         makeKiln(4, 0);
-
-        makeRibbon(1, 1);
-        makeRibbon(1, 2);
-        makeRibbon(2, 2);
-        makeRibbon(3, 2);
-        makeRibbon(4, 2);
-        makeRibbon(4, 1);
-
-        makeRibbon(-1, -1);
-        makeRibbon(0, -1);
-        makeRibbon(1, -1);
-        makeRibbon(2, -1);
-        makeRibbon(3, -1);
-        GameObject ribbo = makeRibbon(4, -1);
-        for (int x = 0; x<10; x++) {
-            for (int y = -1; y>-4; y--) {
-                makeRibbon(x, y);
+        
+        for (int x = 1; x<=4; x++) {
+            for (int y = 3; y>=1; y--) {
+                print(makeRibbon(x, y).GetComponent<Device>().DEBUGReportNeighbors());
             }
         }
-        ribbo.GetComponent<DeviceRibbon>().enableDown = false;
-        ribbo.GetComponent<DeviceRibbon>().enableRight = false;
+        GameObject ribbon1 = makeRibbon(0, 2);
+        GameObject ribbon2 = makeRibbon(0, 1);
+        print(ribbon1.GetComponent<Device>().DEBUGReportNeighbors());
+        print(ribbon2.GetComponent<Device>().DEBUGReportNeighbors());
+        ribbon1.GetComponent<Device>().enableRight = false;
+        //print(ribbon1.GetComponent<Device>().DEBUGReportNeighbors());
+        ribbon1.GetComponent<Device>().enableDown = false;
+        //print(ribbon1.GetComponent<Device>().DEBUGReportNeighbors());
+        ribbon2.GetComponent<Device>().enableRight = false;
+        ribbon1.GetComponent<Device>().enableDown = true;
+
     }
     
     void Update() {
@@ -94,7 +91,13 @@ public class BackstageActor : MonoBehaviour {
         return Instantiate(ribbon_PF, new Vector3(x, y, 0), Quaternion.identity);;
     }
 
+    public GameObject makeChest(int x, int y) {
+        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward)) return null;
+        return Instantiate(chest_PF, new Vector3(x, y, 0), Quaternion.identity);
+    }
+
     public GameObject makeKiln(int x, int y) {
+        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward)) return null;
         return Instantiate(kiln_PF, new Vector3(x, y, 0), Quaternion.identity);
     }
 
