@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Tellura;
 
 public class Device : MonoBehaviour {
     protected bool      _enableUp;
@@ -83,26 +84,26 @@ public class Device : MonoBehaviour {
         Vector3 rightOrigin     = origin + new Vector3(1,0,-2);
 
         if (up) {
-            if (Physics.Raycast(upOrigin, Vector3.forward, out currentHit)) {
+            if (Physics.Raycast(upOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LayerMaskDevice)) {
                 //currentHit.transform.gameObject.layer; // Might need this for only targeting devices i.e. when the player is in front of a device
                 this.upNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
                 if (!isResponse) this.upNeighbor.helloNeighbor(false, true, false, false, true);
             }
         }
         if (down) {
-            if (Physics.Raycast(downOrigin, Vector3.forward, out currentHit)) {
+            if (Physics.Raycast(downOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LayerMaskDevice)) {
                 this.downNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
                 if (!isResponse) this.downNeighbor.helloNeighbor(true, false, false, false, true);
             }
         }
         if (left) {
-            if (Physics.Raycast(leftOrigin, Vector3.forward, out currentHit)) {
+            if (Physics.Raycast(leftOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LayerMaskDevice)) {
                 this.leftNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
                 if (!isResponse) this.leftNeighbor.helloNeighbor(false, false, false, true, true);
             }
         }
         if (right) {
-            if (Physics.Raycast(rightOrigin, Vector3.forward, out currentHit)) {
+            if (Physics.Raycast(rightOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LayerMaskDevice)) {
                 this.rightNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
                 if (!isResponse) this.rightNeighbor.helloNeighbor(false, false, true, false, true);
             }

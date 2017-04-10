@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Tellura;
 
 public class BackstageActor : MonoBehaviour {
     /// <summary>
@@ -13,7 +14,7 @@ public class BackstageActor : MonoBehaviour {
     public GameObject chest_PF;
     public GameObject kiln_PF;
     public GameObject ribbon_PF;
-    public GameObject ribbonPart_PF;
+    public GameObject selectionIndicator_PF;
 
 
 	void Start () {
@@ -65,21 +66,21 @@ public class BackstageActor : MonoBehaviour {
 
         makeKiln(4, 0);
         
-        for (int x = 1; x<=4; x++) {
-            for (int y = 3; y>=1; y--) {
-                print(makeRibbon(x, y).GetComponent<Device>().DEBUGReportNeighbors());
-            }
-        }
-        GameObject ribbon1 = makeRibbon(0, 2);
-        GameObject ribbon2 = makeRibbon(0, 1);
-        print(ribbon1.GetComponent<Device>().DEBUGReportNeighbors());
-        print(ribbon2.GetComponent<Device>().DEBUGReportNeighbors());
-        ribbon1.GetComponent<Device>().enableRight = false;
+        //for (int x = 1; x<=4; x++) {
+        //    for (int y = 3; y>=1; y--) {
+        //        print(makeRibbon(x, y).GetComponent<Device>().DEBUGReportNeighbors());
+        //    }
+        //}
+        //GameObject ribbon1 = makeRibbon(0, 2);
+        //GameObject ribbon2 = makeRibbon(0, 1);
         //print(ribbon1.GetComponent<Device>().DEBUGReportNeighbors());
-        ribbon1.GetComponent<Device>().enableDown = false;
-        //print(ribbon1.GetComponent<Device>().DEBUGReportNeighbors());
-        ribbon2.GetComponent<Device>().enableRight = false;
-        ribbon1.GetComponent<Device>().enableDown = true;
+        //print(ribbon2.GetComponent<Device>().DEBUGReportNeighbors());
+        //ribbon1.GetComponent<Device>().enableRight = false;
+        ////print(ribbon1.GetComponent<Device>().DEBUGReportNeighbors());
+        //ribbon1.GetComponent<Device>().enableDown = false;
+        ////print(ribbon1.GetComponent<Device>().DEBUGReportNeighbors());
+        //ribbon2.GetComponent<Device>().enableRight = false;
+        //ribbon1.GetComponent<Device>().enableDown = true;
 
     }
     
@@ -87,17 +88,17 @@ public class BackstageActor : MonoBehaviour {
     }
 
     public GameObject makeRibbon(int x, int y) {
-        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward)) return null;
-        return Instantiate(ribbon_PF, new Vector3(x, y, 0), Quaternion.identity);;
+        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward, Mathf.Infinity, GameValues.LayerMaskDevice)) return null;
+        return Instantiate(ribbon_PF, new Vector3(x, y, 0), Quaternion.identity);
     }
 
     public GameObject makeChest(int x, int y) {
-        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward)) return null;
+        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward, Mathf.Infinity, GameValues.LayerMaskDevice)) return null;
         return Instantiate(chest_PF, new Vector3(x, y, 0), Quaternion.identity);
     }
 
     public GameObject makeKiln(int x, int y) {
-        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward)) return null;
+        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward, Mathf.Infinity, GameValues.LayerMaskDevice)) return null;
         return Instantiate(kiln_PF, new Vector3(x, y, 0), Quaternion.identity);
     }
 

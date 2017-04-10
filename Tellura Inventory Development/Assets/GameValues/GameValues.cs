@@ -9,5 +9,8 @@ namespace Tellura {
         public static int ScrollWidth { get { return 20; } }
         public static float MinCameraHeight { get { return 2; } }
         public static float MaxCameraHeight { get { return 20; } }
+
+        public static int LayerMaskBuildPlane { get { return 1<<8; } }
+        public static int LayerMaskDevice { get { return 1<<9; } }
     }
 }
