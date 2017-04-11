@@ -4,21 +4,33 @@ using UnityEngine;
 using Tellura;
 
 public class InputController : MonoBehaviour {
-    GameObject selectionIndicatorLOAD;
-    GameObject cursorIndicatorLOAD;
+    GameObject  selectionIndicatorLOAD;
+    GameObject  cursorIndicatorLOAD;
+    GameObject  ribbonLOAD;
+    Sprite      ribbonSpriteLOAD;
+    GameObject  chestLOAD;
+    Sprite      chestSpriteLOAD;
+    GameObject  kilnLOAD;
+    Sprite      kilnSpriteLOAD;
 
-    bool BuildMode;
+    bool        BuildMode;
 
-    GameObject deviceToPlace;
-    GameObject selectedDevice;
-    GameObject selectionIndicator;
-    GameObject cursorIndicator;
+    GameObject  deviceToPlace;
+    GameObject  selectedDevice;
+    GameObject  selectionIndicator;
+    GameObject  cursorIndicator;
 
     private void Start() {
-        BuildMode = true;
-        selectionIndicatorLOAD = Resources.Load("Prefabs/SelectionIndicator") as GameObject;
-        cursorIndicatorLOAD = Resources.Load("Prefabs/CursorIndicator") as GameObject;
-        deviceToPlace = Resources.Load("Prefabs/Ribbon") as GameObject;
+        selectionIndicatorLOAD  = Resources.Load("Prefabs/SelectionIndicator") as GameObject;
+        cursorIndicatorLOAD     = Resources.Load("Prefabs/CursorIndicator") as GameObject;
+        ribbonLOAD              = Resources.Load("Prefabs/Ribbon") as GameObject;
+        ribbonSpriteLOAD        = Resources.Load("Sprites/Devices/Ribbon") as Sprite;
+        chestLOAD               = Resources.Load("Prefabs/Chest") as GameObject;
+        chestSpriteLOAD         = Resources.Load("Sprites/Devices/Chest") as Sprite;
+        kilnLOAD                = Resources.Load("Prefabs/Kiln") as GameObject;
+        kilnSpriteLOAD          = Resources.Load("Sprites/Devices/Kiln") as Sprite;
+        BuildMode               = true;
+        deviceToPlace           = null;
     }
 
     void Update () {
@@ -94,7 +106,7 @@ public class InputController : MonoBehaviour {
                 Destroy(selectionIndicator);
                 selectedDevice = null;
             }
-        } else if (Input.GetMouseButton(0)) {
+        } else if (Input.GetMouseButton(0) && deviceToPlace != null) {
             RaycastHit currentHit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), Mathf.Infinity, GameValues.LayerMaskDevice)) return;
             Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out currentHit, Mathf.Infinity, GameValues.LayerMaskBuildPlane);
@@ -121,6 +133,30 @@ public class InputController : MonoBehaviour {
     }
 
     private void KeyCheck() {
-        string inputs = Input.inputString;
+        if (Input.GetKeyDown(KeyCode.Alpha0)) {
+            deviceToPlace = null;
+            setBuildGhostSprite(null);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            deviceToPlace = ribbonLOAD;
+            setBuildGhostSprite(deviceToPlace.GetComponent<SpriteRenderer>().sprite);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            deviceToPlace = chestLOAD;
+            setBuildGhostSprite(deviceToPlace.GetComponent<SpriteRenderer>().sprite);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            deviceToPlace = kilnLOAD;
+            setBuildGhostSprite(deviceToPlace.GetComponent<SpriteRenderer>().sprite);
+        }
+    }
+
+    private void setBuildGhostSprite(Sprite sprite) {
+        SpriteRenderer[] renderers = cursorIndicator.GetComponentsInChildren<SpriteRenderer>();
+        foreach (SpriteRenderer renderer in renderers) {
+            if(renderer.gameObject.name == "BuildGhost") {
+                renderer.sprite = sprite;
+            }
+        }
     }
 }
