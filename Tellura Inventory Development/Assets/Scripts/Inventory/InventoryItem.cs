@@ -4,11 +4,11 @@ using System.Collections.Generic;
 public class InventoryItem {
     private bool    isTemplate;     // Master List items.
     private bool    isLock;         // For locking inventory slots and filters.
-    private int      id;            // ID.
-    private int      stackMax;      // Max amount of this item in one inventory slot.
-    private int      stackCurrent;  // Current amount of this item present in the slot.
-    private string   name;          // Display name of the item.
-    private string   shortName;     // Code name for item.
+    private int     id;            // ID.
+    private int     stackMax;      // Max amount of this item in one inventory slot.
+    private int     stackCurrent;  // Current amount of this item present in the slot.
+    private string  name;          // Display name of the item.
+    private string  shortName;     // Code name for item.
     //public          InventoryItemData data;
 
     /// <summary>

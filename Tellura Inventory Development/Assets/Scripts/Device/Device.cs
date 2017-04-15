@@ -55,10 +55,10 @@ public class Device : MonoBehaviour {
     protected Device this[int i] {
         get {
             switch (i) {
-                case (0): return this.upNeighbor;
-                case (1): return this.downNeighbor;
-                case (2): return this.leftNeighbor;
-                case (3): return this.rightNeighbor;
+                case (0): return upNeighbor;
+                case (1): return downNeighbor;
+                case (2): return leftNeighbor;
+                case (3): return rightNeighbor;
             }
             return null;
         }
@@ -71,7 +71,7 @@ public class Device : MonoBehaviour {
     /// <param name="down">Check and set down neighbor.</param>
     /// <param name="left">Check and set left neighbor.</param>
     /// <param name="right">Check and set right neighbor.</param>
-    /// <param name="respond">Whether or not neighbors will update themselves.</param>
+    /// <param name="respond">Whether or not to tell neighbors to update themselves.</param>
     public virtual void HelloNeighbor(bool up = true, bool down = true, bool left = true, bool right = true, bool respond = true) {
         RaycastHit currentHit;
         Vector3 origin          = transform.position;
@@ -106,9 +106,28 @@ public class Device : MonoBehaviour {
         }
     }
 
-    // Attempts to place all item's in this device's inventories as well as the device into a target inventory.
-    public void pickUpDevice(Inventory targetInventory) {
+    public bool ToggleUp() {
+        enableUp = enableUp ? false : true;
+        upNeighbor.HelloNeighbor(false, true, false, false, false);
+        return enableUp;
+    }
 
+    public bool ToggleDown() {
+        enableDown = enableDown ? false : true;
+        downNeighbor.HelloNeighbor(true, false, false, false, false);
+        return enableDown;
+    }
+
+    public bool ToggleLeft() {
+        enableLeft = enableLeft ? false : true;
+        leftNeighbor.HelloNeighbor(false, false, false, true, false);
+        return enableLeft;
+    }
+
+    public bool ToggleRight() {
+        enableRight = enableRight ? false : true;
+        rightNeighbor.HelloNeighbor(false, false, true, false, false);
+        return enableRight;
     }
 
     public string DEBUGReportNeighbors() {

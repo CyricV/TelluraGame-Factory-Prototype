@@ -133,6 +133,24 @@ public class InputController : MonoBehaviour {
     }
 
     private void KeyCheck() {
+        if (selectedDevice != null) {
+            if (Input.GetKeyDown(KeyCode.Delete)) {
+                selectedDevice.GetComponent<Device>().destroySelf();
+                selectedDevice = null;
+            }
+            if (Input.GetKeyDown(KeyCode.UpArrow)) {
+                selectedDevice.GetComponent<Device>().ToggleUp();
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow)) {
+                selectedDevice.GetComponent<Device>().ToggleDown();
+            }
+            if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+                selectedDevice.GetComponent<Device>().ToggleLeft();
+            }
+            if (Input.GetKeyDown(KeyCode.RightArrow)) {
+                selectedDevice.GetComponent<Device>().ToggleRight();
+            }
+        }
         if (Input.GetKeyDown(KeyCode.Alpha0)) {
             deviceToPlace = null;
             setBuildGhostSprite(null);
@@ -149,10 +167,7 @@ public class InputController : MonoBehaviour {
             deviceToPlace = kilnLOAD;
             setBuildGhostSprite(deviceToPlace.GetComponent<SpriteRenderer>().sprite);
         }
-        if (Input.GetKeyDown(KeyCode.Delete) && selectedDevice != null) {
-            selectedDevice.GetComponent<Device>().destroySelf();
-            selectedDevice = null;
-        }
+
     }
 
     private void setBuildGhostSprite(Sprite sprite) {

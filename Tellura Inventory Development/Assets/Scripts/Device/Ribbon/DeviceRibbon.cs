@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DeviceRibbon : Device {
-    GameObject      partUp;
-    GameObject      partDown;
-    GameObject      partLeft;
-    GameObject      partRight;
+    GameObject partUp;
+    GameObject partDown;
+    GameObject partLeft;
+    GameObject partRight;
 
     public override bool enableUp {
         get {
@@ -15,10 +15,10 @@ public class DeviceRibbon : Device {
         set {
             if (value && partUp == null && upNeighbor is Device) {
                 _enableUp = value;
-                partUp = makePart("up");
+                MakePart(true, false, false, false);
             } else if (!value) {
                 _enableUp = value;
-                removePart("up");
+                RemovePart(true, false, false, false);
             } else _enableUp = value;
         }
     }
@@ -29,10 +29,10 @@ public class DeviceRibbon : Device {
         set {
             if (value && partDown == null && downNeighbor is Device) {
                 _enableDown = value;
-                partDown = makePart("down");
+                MakePart(false, true, false, false);
             } else if (!value) {
                 _enableDown = value;
-                removePart("down");
+                RemovePart(false, true, false, false);
             } else _enableDown = value;
         }
     }
@@ -43,10 +43,10 @@ public class DeviceRibbon : Device {
         set {
             if (value && partLeft == null && leftNeighbor is Device) {
                 _enableLeft = value;
-                partLeft = makePart("left");
+                MakePart(false, false, true, false);
             } else if (!value) {
                 _enableLeft = value;
-                removePart("left");
+                RemovePart(false, false, true, false);
             } else _enableLeft = value;
         }
     }
@@ -57,10 +57,10 @@ public class DeviceRibbon : Device {
         set {
             if (value && partRight == null && rightNeighbor is Device) {
                 _enableRight = value;
-                partRight = makePart("right");
+                MakePart(false, false, false, true);
             } else if (!value) {
                 _enableRight = value;
-                removePart("right");
+                RemovePart(false, false, false, true);
             } else _enableRight = value;
         }
     }
@@ -81,79 +81,98 @@ public class DeviceRibbon : Device {
 
     public override void HelloNeighbor(bool up = true, bool down = true, bool left = true, bool right = true, bool respond = true) {
         base.HelloNeighbor(up, down, left, right, respond);
-
+        if (!respond) {
+            if (up && upNeighbor.enableDown)        MakePart(true, false, false, false, false);
+            if (down && downNeighbor.enableUp)      MakePart(false, true, false, false, false);
+            if (left && leftNeighbor.enableRight)   MakePart(false, false, true, false, false);
+            if (right && rightNeighbor.enableLeft)  MakePart(false, false, false, true, false);
+        }
     }
 
-    public GameObject makePart(string rotation, bool respond = true) {
-        int z;
-        string name;
-        string loadName;
+    /// <summary>
+    /// Creates and sets directional ribbon parts.
+    /// </summary>
+    /// <param name="up">Create the up part.</param>
+    /// <param name="down">Create the down part.</param>
+    /// <param name="left">Create the left part.</param>
+    /// <param name="right">Create the right part.</param>
+    /// <param name="respond">Whether or not to prompt a response from neighbors.</param>
+    private void MakePart(bool up = true, bool down = true, bool left = true, bool right = true, bool respond = true) {
+        if (!(upNeighbor is Device)) up         = false;
+        if (!(downNeighbor is Device)) down     = false;
+        if (!(leftNeighbor is Device)) left     = false;
+        if (!(rightNeighbor is Device)) right   = false;
 
-        if (rotation == "up" && upNeighbor.enableDown) {
-            z                   = 0;
-            name                = "ribbon_up " + gameObject.GetInstanceID();
-            loadName            = "Prefabs/RibbonPartConnector";
+        if (up && enableUp && upNeighbor.enableDown) {
+            string loadName = "Prefabs/RibbonPartConnector";
+            string name = "ribbon_up " + gameObject.GetInstanceID();
             if (upNeighbor is DeviceRibbon) {
-                loadName        = "Prefabs/RibbonPart";
-                if (respond) (upNeighbor as DeviceRibbon).makePart("down", false);
+                loadName = "Prefabs/RibbonPart";
+                if (respond) (upNeighbor as DeviceRibbon).MakePart(false, true, false, false, false);
             }
-        } else if (rotation == "down" && downNeighbor.enableUp) {
-            z                   = 180;
-            name                = "ribbon_down " + gameObject.GetInstanceID();
-            loadName            = "Prefabs/RibbonPartConnector";
+            partUp = InstantiatePart(0, loadName, name);
+        } else if (up && enableUp) RemovePart(true, false, false, false);
+
+        if (down && enableDown && downNeighbor.enableUp) {
+            string loadName = "Prefabs/RibbonPartConnector";
+            string name = "ribbon_down " + gameObject.GetInstanceID();
             if (downNeighbor is DeviceRibbon) {
-                loadName        = "Prefabs/RibbonPart";
+                loadName = "Prefabs/RibbonPart";
+                if (respond) (downNeighbor as DeviceRibbon).MakePart(true, false, false, false, false);
+            }
+            partDown = InstantiatePart(180, loadName, name);
+        } else if (down && enableDown) RemovePart(false, true, false, false);
 
-                if (respond) (downNeighbor as DeviceRibbon).makePart("up", false);
+        if (left && enableLeft && leftNeighbor.enableRight) {
+            string loadName = "Prefabs/RibbonPartConnector";
+            string name = "ribbon_left " + gameObject.GetInstanceID();
+            if (leftNeighbor is DeviceRibbon) {
+                loadName = "Prefabs/RibbonPart";
+                if (respond) (leftNeighbor as DeviceRibbon).MakePart(false, false, false, true, false);
             }
-        } else if (rotation == "left" && leftNeighbor.enableRight) {
-            z                   = 90;
-            name                = "ribbon_left " + gameObject.GetInstanceID();
-            loadName            = "Prefabs/RibbonPartConnector";
-            if (leftNeighbor is DeviceRibbon){
-                loadName        = "Prefabs/RibbonPart";
-                if (respond) (leftNeighbor as DeviceRibbon).makePart("right", false);
-            }
-        } else if (rotation == "right" && rightNeighbor.enableLeft) {
-            z                   = 270;
-            name                = "ribbon_right " + gameObject.GetInstanceID();
-            loadName            = "Prefabs/RibbonPartConnector";
-            if (rightNeighbor is DeviceRibbon){
-                loadName        = "Prefabs/RibbonPart";
-                if (respond) (rightNeighbor as DeviceRibbon).makePart("left", false);
-            }
-        } else return null;
+            partLeft = InstantiatePart(90, loadName, name);
+        } else if (left && enableLeft) RemovePart(false, false, true, false);
 
+        if (right && enableRight && rightNeighbor.enableLeft) {
+            string loadName = "Prefabs/RibbonPartConnector";
+            string name = "ribbon_right " + gameObject.GetInstanceID();
+            if (rightNeighbor is DeviceRibbon) {
+                loadName = "Prefabs/RibbonPart";
+                if (respond) (rightNeighbor as DeviceRibbon).MakePart(false, false, true, false, false);
+            }
+            partRight = InstantiatePart(270, loadName, name);
+        } else if (right && enableRight) RemovePart(false, false, false, true);
+    }
+
+    private GameObject InstantiatePart(int rotation, string loadName, string name) {
         GameObject part = Instantiate(
-                        Resources.Load(loadName) as GameObject,
-                        gameObject.transform.position,
-                        Quaternion.Euler(0, 0, z));
+                Resources.Load(loadName) as GameObject,
+                gameObject.transform.position,
+                Quaternion.Euler(0, 0, rotation));
         part.name       = name;
-
-        if (rotation == "up") partUp            = part;
-        else if (rotation == "down") partDown   = part;
-        else if (rotation == "left") partLeft   = part;
-        else if (rotation == "right") partRight = part;
         return part;
     }
 
-    private void removePart(string target, bool respond = true) {
-        if (target == "up") {
+    private void RemovePart(bool up = true, bool down = true, bool left = true, bool right = true, bool respond = true) {
+        if (up) {
             Destroy(partUp);
             partUp = null;
-            if (respond && upNeighbor is DeviceRibbon) (upNeighbor as DeviceRibbon).removePart("down", false);
-        } else if (target == "down") {
+            if (respond && upNeighbor is DeviceRibbon) (upNeighbor as DeviceRibbon).RemovePart(false, true, false, false, false);
+        }
+        if (down) {
             Destroy(partDown);
             partDown = null;
-            if (respond && downNeighbor is DeviceRibbon) (downNeighbor as DeviceRibbon).removePart("up", false);
-        } else if (target == "left") {
+            if (respond && downNeighbor is DeviceRibbon) (downNeighbor as DeviceRibbon).RemovePart(true, false, false, false, false);
+        }
+        if (left) {
             Destroy(partLeft);
             partLeft = null;
-            if (respond && leftNeighbor is DeviceRibbon) (leftNeighbor as DeviceRibbon).removePart("right", false);
-        } else if (target == "right") {
+            if (respond && leftNeighbor is DeviceRibbon) (leftNeighbor as DeviceRibbon).RemovePart(false, false, false, true, false);
+        }
+        if (right) {
             Destroy(partRight);
             partRight= null;
-            if (respond && rightNeighbor is DeviceRibbon) (rightNeighbor as DeviceRibbon).removePart("left", false);
+            if (respond && rightNeighbor is DeviceRibbon) (rightNeighbor as DeviceRibbon).RemovePart(false, false, true, false, false);
         }
     }
 }
