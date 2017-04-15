@@ -110,7 +110,7 @@ public class InputController : MonoBehaviour {
             RaycastHit currentHit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), Mathf.Infinity, GameValues.LM_DEVICE)) return;
             Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out currentHit, Mathf.Infinity, GameValues.LM_BUILD_PLANE);
-            print("Creating at "+Mathf.RoundToInt(currentHit.point.x)+", "+Mathf.RoundToInt(currentHit.point.y));
+            print("Creating "+deviceToPlace.gameObject.name+" at "+Mathf.RoundToInt(currentHit.point.x)+", "+Mathf.RoundToInt(currentHit.point.y));
             Instantiate(deviceToPlace, new Vector3(Mathf.RoundToInt(currentHit.point.x),Mathf.RoundToInt(currentHit.point.y),0), Quaternion.identity);
         }
     }

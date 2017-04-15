@@ -20,7 +20,8 @@ public class DeviceSpawner : MonoBehaviour {
 	
 	void Update () {
         if (size > completeAt) {
-            transform.localScale = Vector3.one;
+            size = 1;
+            UpdateScale();
             Destroy(this);
             return;
         }
@@ -29,10 +30,12 @@ public class DeviceSpawner : MonoBehaviour {
 	}
     void UpdateScale() {
         float reciprocal = 1/size;
-        bc.size =  new Vector3(
-            scaleX ? reciprocal : 1,
-            scaleY ? reciprocal : 1,
-            1);
+        if (bc != null) {
+            bc.size =  new Vector3(
+                scaleX ? reciprocal : 1,
+                scaleY ? reciprocal : 1,
+                0.001f);
+        }
         transform.localScale = new Vector3(
             scaleX ? size : 1,
             scaleY ? size : 1,
