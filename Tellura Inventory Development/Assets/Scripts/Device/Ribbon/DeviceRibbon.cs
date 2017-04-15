@@ -69,7 +69,7 @@ public class DeviceRibbon : Device {
 
     private void Awake() {
         gameObject.name = "Ribbon " + gameObject.GetInstanceID();
-        helloNeighbor();
+        HelloNeighbor();
         enableUp        = true;
         enableDown      = true;
         enableLeft      = true;
@@ -78,6 +78,11 @@ public class DeviceRibbon : Device {
     
 	void Start () {
 	}
+
+    public override void HelloNeighbor(bool up = true, bool down = true, bool left = true, bool right = true, bool respond = true) {
+        base.HelloNeighbor(up, down, left, right, respond);
+
+    }
 
     public GameObject makePart(string rotation, bool respond = true) {
         int z;

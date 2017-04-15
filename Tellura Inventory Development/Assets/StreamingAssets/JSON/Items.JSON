@@ -1,0 +1,105 @@
+        // items[0] = new InventoryItem(
+        //         0,
+        //         32,
+        //         "Ancient Dust"
+        // );
+        // items[1] = new InventoryItem(
+        //         1,
+        //         16,
+        //         "Ley Crystal"
+        // );
+        // items[2] = new InventoryItem(
+        //         2,
+        //         16,
+        //         "Simple Scrap"
+        // );
+        // items[3] = new InventoryItem(
+        //         3,
+        //         16,
+        //         "Simple Core"
+        // );
+        // items[4] = new InventoryItem(
+        //         4,
+        //         16,
+        //         "Clay"
+        // );
+        // items[5] = new InventoryItem(
+        //         5,
+        //         32,
+        //         "Ceramic Plate"
+        // );
+        // items[6] = new InventoryItem(
+        //         6,
+        //         32,
+        //         "Iron Dust"
+        // );
+        // items[7] = new InventoryItem(
+        //         7,
+        //         32,
+        //         "Iron Plate"
+        // );
+        // items[8] = new InventoryItem(
+        //         8,
+        //         32,
+        //         "Copper Dust"
+        // );
+        // items[9] = new InventoryItem(
+        //         9,
+        //         32,
+        //         "Copper Plate"
+        // );
+
+{
+        "items":[
+                {
+                        "name":"dust_ancient",
+                        "stackMax":32,
+                        "displayName":"Ancient Dust"
+                },
+                {
+                        "name":"crystal_ley",
+                        "stackMax":16,
+                        "displayName":"Ley Crystal"
+                }
+                {
+                        "name":"scrap_simple",
+                        "stackMax":16,
+                        "displayName":"Simple Scrap"
+                },
+                {
+                        "name":"core_simple",
+                        "stackMax":16,
+                        "displayName":"Simple Core"
+                },
+                {
+                        "name":"clay",
+                        "stackMax":16,
+                        "displayName":"Clay"
+                },
+                {
+                        "name":"plate_ceramic",
+                        "stackMax":32,
+                        "displayName":"Ceramic Plate"
+                },
+                {
+                        "name":"dust_iron",
+                        "stackMax":32,
+                        "displayName":"Iron Dust"
+                },
+                {
+                        "name":"plate_iron",
+                        "stackMax":32,
+                        "displayName":"Plate Iron"
+                },
+                {
+                        "name":"dust_copper",
+                        "stackMax":32,
+                        "displayName":"Copper Dust"
+                },
+                {
+                        "name":"plate_copper",
+                        "stackMax":32,
+                        "displayName":"Copper Plate"
+                },
+        ]
+}

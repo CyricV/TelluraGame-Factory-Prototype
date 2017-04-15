@@ -1,5 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using Keywords;
+using SimpleJSON;
+using System.IO;
 
 public class InventoryItemMasterList {
     /// <summary>
@@ -7,58 +11,16 @@ public class InventoryItemMasterList {
     /// </summary>
     public InventoryItem[] items;
 
-    public InventoryItemMasterList(int size = 10) {
-        items  = new InventoryItem[size];
-
-        items[0] = new InventoryItem(
-                0,
-                32,
-                "Ancient Dust"
-        );
-        items[1] = new InventoryItem(
-                1,
-                16,
-                "Ley Crystal"
-        );
-        items[2] = new InventoryItem(
-                2,
-                16,
-                "Simple Scrap"
-        );
-        items[3] = new InventoryItem(
-                3,
-                16,
-                "Simple Core"
-        );
-        items[4] = new InventoryItem(
-                4,
-                16,
-                "Clay"
-        );
-        items[5] = new InventoryItem(
-                5,
-                32,
-                "Ceramic Plate"
-        );
-        items[6] = new InventoryItem(
-                6,
-                32,
-                "Iron Dust"
-        );
-        items[7] = new InventoryItem(
-                7,
-                32,
-                "Iron Plate"
-        );
-        items[8] = new InventoryItem(
-                8,
-                32,
-                "Copper Dust"
-        );
-        items[9] = new InventoryItem(
-                9,
-                32,
-                "Copper Plate"
-        );
+    public InventoryItemMasterList() {
+        string data = File.ReadAllText(Application.streamingAssetsPath+"/JSON/items.JSON");
+        JSONNode json = JSON.Parse(data);
+        items = new InventoryItem[json[Generic.ITEMS].Count];
+        for (int i = 0; i < json[Generic.ITEMS].Count; i++) {
+            items[i] = new InventoryItem(
+                i,
+                json[Generic.ITEMS][i][Generic.STACK_MAX],
+                json[Generic.ITEMS][i][Generic.DISPLAY_NAME],
+                json[Generic.ITEMS][i][Generic.NAME]);
+        }
     }
 }

@@ -88,17 +88,17 @@ public class BackstageActor : MonoBehaviour {
     }
 
     public GameObject makeRibbon(int x, int y) {
-        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward, Mathf.Infinity, GameValues.LayerMaskDevice)) return null;
+        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward, Mathf.Infinity, GameValues.LM_DEVICE)) return null;
         return Instantiate(ribbon_PF, new Vector3(x, y, 0), Quaternion.identity);
     }
 
     public GameObject makeChest(int x, int y) {
-        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward, Mathf.Infinity, GameValues.LayerMaskDevice)) return null;
+        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward, Mathf.Infinity, GameValues.LM_DEVICE)) return null;
         return Instantiate(chest_PF, new Vector3(x, y, 0), Quaternion.identity);
     }
 
     public GameObject makeKiln(int x, int y) {
-        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward, Mathf.Infinity, GameValues.LayerMaskDevice)) return null;
+        if (Physics.Raycast(new Vector3(x, y, 0), Vector3.forward, Mathf.Infinity, GameValues.LM_DEVICE)) return null;
         return Instantiate(kiln_PF, new Vector3(x, y, 0), Quaternion.identity);
     }
 

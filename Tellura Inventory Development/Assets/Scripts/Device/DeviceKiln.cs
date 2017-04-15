@@ -16,7 +16,7 @@ public class DeviceKiln : Device {
 	}
 
     private void Start() {
-        this.helloNeighbor();
+        this.HelloNeighbor();
     }
 	
 	// Update is called once per frame

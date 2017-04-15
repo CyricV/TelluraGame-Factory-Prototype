@@ -59,10 +59,6 @@ public class Device : MonoBehaviour {
                 case (1): return this.downNeighbor;
                 case (2): return this.leftNeighbor;
                 case (3): return this.rightNeighbor;
-                //case (4): return this.upNode;
-                //case (5): return this.downNode;
-                //case (6): return this.leftNode;
-                //case (7): return this.rightNode;
             }
             return null;
         }
@@ -75,7 +71,8 @@ public class Device : MonoBehaviour {
     /// <param name="down">Check and set down neighbor.</param>
     /// <param name="left">Check and set left neighbor.</param>
     /// <param name="right">Check and set right neighbor.</param>
-    public void helloNeighbor(bool up = true, bool down = true, bool left = true, bool right = true, bool isResponse = false) {
+    /// <param name="respond">Whether or not neighbors will update themselves.</param>
+    public virtual void HelloNeighbor(bool up = true, bool down = true, bool left = true, bool right = true, bool respond = true) {
         RaycastHit currentHit;
         Vector3 origin          = transform.position;
         Vector3 upOrigin        = origin + new Vector3(0,1,-2);
@@ -84,28 +81,27 @@ public class Device : MonoBehaviour {
         Vector3 rightOrigin     = origin + new Vector3(1,0,-2);
 
         if (up) {
-            if (Physics.Raycast(upOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LayerMaskDevice)) {
-                //currentHit.transform.gameObject.layer; // Might need this for only targeting devices i.e. when the player is in front of a device
+            if (Physics.Raycast(upOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
                 this.upNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
-                if (!isResponse) this.upNeighbor.helloNeighbor(false, true, false, false, true);
+                if (respond) this.upNeighbor.HelloNeighbor(false, true, false, false, false);
             }
         }
         if (down) {
-            if (Physics.Raycast(downOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LayerMaskDevice)) {
+            if (Physics.Raycast(downOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
                 this.downNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
-                if (!isResponse) this.downNeighbor.helloNeighbor(true, false, false, false, true);
+                if (respond) this.downNeighbor.HelloNeighbor(true, false, false, false, false);
             }
         }
         if (left) {
-            if (Physics.Raycast(leftOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LayerMaskDevice)) {
+            if (Physics.Raycast(leftOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
                 this.leftNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
-                if (!isResponse) this.leftNeighbor.helloNeighbor(false, false, false, true, true);
+                if (respond) this.leftNeighbor.HelloNeighbor(false, false, false, true, false);
             }
         }
         if (right) {
-            if (Physics.Raycast(rightOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LayerMaskDevice)) {
+            if (Physics.Raycast(rightOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
                 this.rightNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
-                if (!isResponse) this.rightNeighbor.helloNeighbor(false, false, true, false, true);
+                if (respond) this.rightNeighbor.HelloNeighbor(false, false, true, false, false);
             }
         }
     }
@@ -135,5 +131,13 @@ public class Device : MonoBehaviour {
                 "\n\tDOWN: \t" + downName +
                 "\n\tLEFT: \t" + leftName + 
                 "\n\tRIGHT: \t" + rightName);
+    }
+
+    public void destroySelf() {
+        if (upNeighbor != null) upNeighbor.downNeighbor = null;
+        if (downNeighbor != null) downNeighbor.upNeighbor = null;
+        if (leftNeighbor != null) leftNeighbor.rightNeighbor = null;
+        if (rightNeighbor != null) rightNeighbor.leftNeighbor = null;
+        Destroy(gameObject);
     }
 }
