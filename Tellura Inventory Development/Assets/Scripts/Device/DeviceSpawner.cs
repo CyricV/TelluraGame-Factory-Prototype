@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DeviceSpawner : MonoBehaviour {
-    float size = 0;
+    BoxCollider bc;
+    float size = 0.001f;
     float speed = 5;
     float completeAt = 0.999f;
     public bool scaleX = true;
     public bool scaleY = true;
-	// Use this for initialization
+
+    private void Awake() {
+        bc = gameObject.GetComponent<BoxCollider>();
+    }
+
 	void Start () {
         UpdateScale();
     }
 	
-	// Update is called once per frame
 	void Update () {
         if (size > completeAt) {
             transform.localScale = Vector3.one;
@@ -24,6 +28,11 @@ public class DeviceSpawner : MonoBehaviour {
         UpdateScale();
 	}
     void UpdateScale() {
+        float reciprocal = 1/size;
+        bc.size =  new Vector3(
+            scaleX ? reciprocal : 1,
+            scaleY ? reciprocal : 1,
+            1);
         transform.localScale = new Vector3(
             scaleX ? size : 1,
             scaleY ? size : 1,
