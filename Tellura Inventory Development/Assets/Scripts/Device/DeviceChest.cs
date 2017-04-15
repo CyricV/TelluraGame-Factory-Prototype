@@ -18,7 +18,7 @@ public class DeviceChest : Device {
 	}
 
     private void Start() {
-        helloNeighbor();
+        HelloNeighbor();
     }
 
     // Update is called once per frame

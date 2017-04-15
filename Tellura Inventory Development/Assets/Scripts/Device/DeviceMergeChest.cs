@@ -18,7 +18,7 @@ public class DeviceMergeChest : Device {
     }
     
     private void chestLink() {
-        helloNeighbor();
+        HelloNeighbor();
         for (int i = 0; i < 4; i++) {
             DeviceMergeChest currentNeighbor = this[i] as DeviceMergeChest;
             if (currentNeighbor != null) {

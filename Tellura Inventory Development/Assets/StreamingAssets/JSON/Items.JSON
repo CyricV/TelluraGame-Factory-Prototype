@@ -1,0 +1,54 @@
+{
+        "items":[
+                {
+                        "name":"dust_ancient",
+                        "stackMax":32,
+                        "displayName":"Ancient Dust"
+                },
+                {
+                        "name":"crystal_ley",
+                        "stackMax":16,
+                        "displayName":"Ley Crystal"
+                }
+                {
+                        "name":"scrap_simple",
+                        "stackMax":16,
+                        "displayName":"Simple Scrap"
+                },
+                {
+                        "name":"core_simple",
+                        "stackMax":16,
+                        "displayName":"Simple Core"
+                },
+                {
+                        "name":"clay",
+                        "stackMax":16,
+                        "displayName":"Clay"
+                },
+                {
+                        "name":"plate_ceramic",
+                        "stackMax":32,
+                        "displayName":"Ceramic Plate"
+                },
+                {
+                        "name":"dust_iron",
+                        "stackMax":32,
+                        "displayName":"Iron Dust"
+                },
+                {
+                        "name":"plate_iron",
+                        "stackMax":32,
+                        "displayName":"Plate Iron"
+                },
+                {
+                        "name":"dust_copper",
+                        "stackMax":32,
+                        "displayName":"Copper Dust"
+                },
+                {
+                        "name":"plate_copper",
+                        "stackMax":32,
+                        "displayName":"Copper Plate"
+                },
+        ]
+}

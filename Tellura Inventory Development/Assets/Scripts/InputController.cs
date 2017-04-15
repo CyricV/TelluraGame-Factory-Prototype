@@ -49,24 +49,24 @@ public class InputController : MonoBehaviour {
         float ypos          = mousePos.y;
         Vector3 movement    = new Vector3(0,0,0);
         Vector3 origin      = Camera.main.transform.position;
-        int scrollSpeed     = Mathf.RoundToInt(Mathf.Lerp(GameValues.MinScrollSpeed, GameValues.MaxScrollSpeed, origin.z/GameValues.MaxCameraHeight));
+        int scrollSpeed     = Mathf.RoundToInt(Mathf.Lerp(GameValues.MIN_SCROLL_SPEED, GameValues.MAX_SCROLL_SPEED, origin.z/GameValues.MAX_CAMERA_HEIGHT));
 
         //horizontal camera movement
-        if(xpos < GameValues.ScrollWidth) {
+        if(xpos < GameValues.SCROLL_ACTIVATE_WIDTH) {
             movement.x -= scrollSpeed;
-        } else if(xpos > Screen.width - GameValues.ScrollWidth) {
+        } else if(xpos > Screen.width - GameValues.SCROLL_ACTIVATE_WIDTH) {
             movement.x += scrollSpeed;
         }
  
         //vertical camera movement
-        if(ypos < GameValues.ScrollWidth) {
+        if(ypos < GameValues.SCROLL_ACTIVATE_WIDTH) {
             movement.y -= scrollSpeed;
-        } else if(ypos > Screen.height - GameValues.ScrollWidth) {
+        } else if(ypos > Screen.height - GameValues.SCROLL_ACTIVATE_WIDTH) {
             movement.y += scrollSpeed;
         }
 
         //away from ground movement
-        movement.z = GameValues.ZoomScrollSpeed * Input.GetAxis("Mouse ScrollWheel");
+        movement.z = GameValues.ZOOM_SCROLL_SPEED * Input.GetAxis("Mouse ScrollWheel");
 
         //calculate desired camera position based on received input
         Vector3 destination = origin;
@@ -75,15 +75,15 @@ public class InputController : MonoBehaviour {
         destination.z += movement.z;
 
         //limit away from ground movement to be between a minimum and maximum distance
-        if (destination.z < -GameValues.MaxCameraHeight) {
-            destination.z = -GameValues.MaxCameraHeight;
-        } else if(destination.z > -GameValues.MinCameraHeight) {
-            destination.z = -GameValues.MinCameraHeight;
+        if (destination.z < -GameValues.MAX_CAMERA_HEIGHT) {
+            destination.z = -GameValues.MAX_CAMERA_HEIGHT;
+        } else if(destination.z > -GameValues.MIN_CAMERA_HEIGHT) {
+            destination.z = -GameValues.MIN_CAMERA_HEIGHT;
         }
 
         //if a change in position is detected perform the necessary update
         if (destination != origin) {
-            Camera.main.transform.position = Vector3.MoveTowards(origin, destination, Time.deltaTime * GameValues.MaxScrollSpeed);
+            Camera.main.transform.position = Vector3.MoveTowards(origin, destination, Time.deltaTime * GameValues.MAX_SCROLL_SPEED);
         }
     }
 
@@ -94,7 +94,7 @@ public class InputController : MonoBehaviour {
         if (Input.GetMouseButtonDown(0) && deviceToPlace == null) {
             RaycastHit currentHit;
             //Debug.DrawRay(Camera.main.ScreenPointToRay(mousePos).origin, Camera.main.ScreenPointToRay(mousePos).direction * 20, Color.blue, 99);
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out currentHit, Mathf.Infinity, GameValues.LayerMaskDevice)) {
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
                 selectedDevice = currentHit.transform.gameObject;
                 print(selectedDevice.name);
                 Destroy(selectionIndicator);
@@ -108,8 +108,8 @@ public class InputController : MonoBehaviour {
             }
         } else if (Input.GetMouseButton(0) && deviceToPlace != null) {
             RaycastHit currentHit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), Mathf.Infinity, GameValues.LayerMaskDevice)) return;
-            Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out currentHit, Mathf.Infinity, GameValues.LayerMaskBuildPlane);
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), Mathf.Infinity, GameValues.LM_DEVICE)) return;
+            Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out currentHit, Mathf.Infinity, GameValues.LM_BUILD_PLANE);
             print("Creating at "+Mathf.RoundToInt(currentHit.point.x)+", "+Mathf.RoundToInt(currentHit.point.y));
             Instantiate(deviceToPlace, new Vector3(Mathf.RoundToInt(currentHit.point.x),Mathf.RoundToInt(currentHit.point.y),0), Quaternion.identity);
         }
@@ -126,7 +126,7 @@ public class InputController : MonoBehaviour {
             int curX = Mathf.RoundToInt(cursorIndicator.transform.position.x);
             int curY = Mathf.RoundToInt(cursorIndicator.transform.position.y);
             RaycastHit currentHit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out currentHit, Mathf.Infinity, GameValues.LayerMaskBuildPlane)) {
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out currentHit, Mathf.Infinity, GameValues.LM_BUILD_PLANE)) {
                 cursorIndicator.transform.position = new Vector3(Mathf.RoundToInt(currentHit.point.x), Mathf.RoundToInt(currentHit.point.y), 0);
             }
         }
@@ -148,6 +148,10 @@ public class InputController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha3)) {
             deviceToPlace = kilnLOAD;
             setBuildGhostSprite(deviceToPlace.GetComponent<SpriteRenderer>().sprite);
+        }
+        if (Input.GetKeyDown(KeyCode.Delete) && selectedDevice != null) {
+            selectedDevice.GetComponent<Device>().destroySelf();
+            selectedDevice = null;
         }
     }
 
