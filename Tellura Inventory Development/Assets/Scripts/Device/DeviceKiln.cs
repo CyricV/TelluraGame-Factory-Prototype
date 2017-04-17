@@ -10,9 +10,9 @@ public class DeviceKiln : Device {
         gameObject.name = "Kiln " + gameObject.GetInstanceID();
         input           = new Inventory(1);
         enableUp        = true;
-        enableDown      = false;
-        enableLeft      = false;
-        enableRight     = false;
+        enableDn      = false;
+        enableLt      = false;
+        enableRt     = false;
 	}
 
     private void Start() {

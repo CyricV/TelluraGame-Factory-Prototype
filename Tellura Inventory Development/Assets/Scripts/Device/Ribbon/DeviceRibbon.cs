@@ -4,144 +4,135 @@ using UnityEngine;
 
 public class DeviceRibbon : Device {
     GameObject partUp;
-    GameObject partDown;
-    GameObject partLeft;
-    GameObject partRight;
+    GameObject partDn;
+    GameObject partLt;
+    GameObject partRt;
 
     public override bool enableUp {
         get {
             return _enableUp;
         }
         set {
-            if (value && partUp == null && upNeighbor is Device) {
-                _enableUp = value;
-                MakePart(true, false, false, false);
-            } else if (!value) {
-                _enableUp = value;
-                RemovePart(true, false, false, false);
-            } else _enableUp = value;
+            _enableUp = value;
+            ManagePart(true, false, false, false);
+            if (neighborUp != null) neighborUp.Notify(false, true, false, false);
         }
     }
-    public override bool enableDown {
+    public override bool enableDn {
         get {
-            return _enableDown;
+            return _enableDn;
         }
         set {
-            if (value && partDown == null && downNeighbor is Device) {
-                _enableDown = value;
-                MakePart(false, true, false, false);
-            } else if (!value) {
-                _enableDown = value;
-                RemovePart(false, true, false, false);
-            } else _enableDown = value;
+            _enableDn = value;
+            ManagePart(false, true, false, false);
+            if (neighborDn != null) neighborDn.Notify(true, false, false, false);
         }
     }
-    public override bool enableLeft {
+    public override bool enableLt {
         get {
-            return _enableLeft;
+            return _enableLt;
         }
         set {
-            if (value && partLeft == null && leftNeighbor is Device) {
-                _enableLeft = value;
-                MakePart(false, false, true, false);
-            } else if (!value) {
-                _enableLeft = value;
-                RemovePart(false, false, true, false);
-            } else _enableLeft = value;
+            _enableLt = value;
+            ManagePart(false, false, true, false);
+            if (neighborLt != null) neighborLt.Notify(false, false, false, true);
         }
     }
-    public override bool enableRight {
+    public override bool enableRt {
         get {
-            return _enableRight;
+            return _enableRt;
         }
         set {
-            if (value && partRight == null && rightNeighbor is Device) {
-                _enableRight = value;
-                MakePart(false, false, false, true);
-            } else if (!value) {
-                _enableRight = value;
-                RemovePart(false, false, false, true);
-            } else _enableRight = value;
+            _enableRt = value;
+            ManagePart(false, false, false, true);
+            if (neighborRt != null) neighborRt.Notify(false, false, true, false);
         }
     }
 
     RibbonNode node;
 
     private void Awake() {
-        gameObject.name = "Ribbon " + gameObject.GetInstanceID();
-        HelloNeighbor();
-        enableUp        = true;
-        enableDown      = true;
-        enableLeft      = true;
-        enableRight     = true;
+        gameObject.name     = "Ribbon " + gameObject.GetInstanceID();
+        enableUp            = true;
+        enableDn            = true;
+        enableLt            = true;
+        enableRt            = true;
     }
     
 	void Start () {
+        HelloNeighbor();
 	}
 
-    public override void HelloNeighbor(bool up = true, bool down = true, bool left = true, bool right = true, bool respond = true) {
-        base.HelloNeighbor(up, down, left, right, respond);
-        if (!respond) {
-            if (up && upNeighbor.enableDown)        MakePart(true, false, false, false, false);
-            if (down && downNeighbor.enableUp)      MakePart(false, true, false, false, false);
-            if (left && leftNeighbor.enableRight)   MakePart(false, false, true, false, false);
-            if (right && rightNeighbor.enableLeft)  MakePart(false, false, false, true, false);
+    protected override void HelloNeighbor(bool up = true, bool dn = true, bool lt = true, bool rt = true, bool respond = true) {
+        base.HelloNeighbor(up, dn, lt, rt, respond);
+        if (up) ManagePart(true,  false, false, false);
+        if (dn) ManagePart(false, true,  false, false);
+        if (lt) ManagePart(false, false, true,  false);
+        if (rt) ManagePart(false, false, false, true);
+    }
+
+    public override void Notify(bool up = false, bool dn = false, bool lt = false, bool rt = false) {
+        base.Notify(up, dn, lt, rt);
+        ManagePart(up, dn, lt, rt);
+    }
+
+    private void ManagePart(bool up = true, bool dn = true, bool lt = true, bool rt = true) {
+        if (up) {
+            if (neighborUp == null || !neighborUp.enableDn || !enableUp) {
+                RemovePart(true, false, false, false);
+            } else if (partUp == null && enableUp) {
+                MakePart(true, false, false, false);
+            }
+        }
+        if (dn) {
+            if (neighborDn == null || !neighborDn.enableUp || !enableDn) {
+                RemovePart(false, true, false, false);
+            } else if (partDn == null && enableDn) {
+                MakePart(false, true, false, false);
+            }
+        }
+        if (lt) {
+            if (neighborLt == null || !neighborLt.enableRt || !enableLt) {
+                RemovePart(false, false, true, false);
+            } else if (partLt == null && enableLt) {
+                MakePart(false, false, true, false);
+            }
+        }
+        if (rt) {
+            if (neighborRt == null || !neighborRt.enableLt || !enableRt) {
+                RemovePart(false, false, false, true);
+            } else if (partRt == null && enableRt) {
+                MakePart(false, false, false, true);
+            }
         }
     }
 
-    /// <summary>
-    /// Creates and sets directional ribbon parts.
-    /// </summary>
-    /// <param name="up">Create the up part.</param>
-    /// <param name="down">Create the down part.</param>
-    /// <param name="left">Create the left part.</param>
-    /// <param name="right">Create the right part.</param>
-    /// <param name="respond">Whether or not to prompt a response from neighbors.</param>
-    private void MakePart(bool up = true, bool down = true, bool left = true, bool right = true, bool respond = true) {
-        if (!(upNeighbor is Device)) up         = false;
-        if (!(downNeighbor is Device)) down     = false;
-        if (!(leftNeighbor is Device)) left     = false;
-        if (!(rightNeighbor is Device)) right   = false;
+    private void MakePart(bool up = true, bool dn = true, bool lt = true, bool rt = true) {
+        if (!(neighborUp is Device)) up = false;
+        if (!(neighborDn is Device)) dn = false;
+        if (!(neighborLt is Device)) lt = false;
+        if (!(neighborRt is Device)) rt = false;
 
-        if (up && enableUp && upNeighbor.enableDown) {
-            string loadName = "Prefabs/RibbonPartConnector";
-            string name = "ribbon_up " + gameObject.GetInstanceID();
-            if (upNeighbor is DeviceRibbon) {
-                loadName = "Prefabs/RibbonPart";
-                if (respond) (upNeighbor as DeviceRibbon).MakePart(false, true, false, false, false);
-            }
-            partUp = InstantiatePart(0, loadName, name);
-        } else if (up && enableUp) RemovePart(true, false, false, false);
-
-        if (down && enableDown && downNeighbor.enableUp) {
-            string loadName = "Prefabs/RibbonPartConnector";
-            string name = "ribbon_down " + gameObject.GetInstanceID();
-            if (downNeighbor is DeviceRibbon) {
-                loadName = "Prefabs/RibbonPart";
-                if (respond) (downNeighbor as DeviceRibbon).MakePart(true, false, false, false, false);
-            }
-            partDown = InstantiatePart(180, loadName, name);
-        } else if (down && enableDown) RemovePart(false, true, false, false);
-
-        if (left && enableLeft && leftNeighbor.enableRight) {
-            string loadName = "Prefabs/RibbonPartConnector";
-            string name = "ribbon_left " + gameObject.GetInstanceID();
-            if (leftNeighbor is DeviceRibbon) {
-                loadName = "Prefabs/RibbonPart";
-                if (respond) (leftNeighbor as DeviceRibbon).MakePart(false, false, false, true, false);
-            }
-            partLeft = InstantiatePart(90, loadName, name);
-        } else if (left && enableLeft) RemovePart(false, false, true, false);
-
-        if (right && enableRight && rightNeighbor.enableLeft) {
-            string loadName = "Prefabs/RibbonPartConnector";
-            string name = "ribbon_right " + gameObject.GetInstanceID();
-            if (rightNeighbor is DeviceRibbon) {
-                loadName = "Prefabs/RibbonPart";
-                if (respond) (rightNeighbor as DeviceRibbon).MakePart(false, false, true, false, false);
-            }
-            partRight = InstantiatePart(270, loadName, name);
-        } else if (right && enableRight) RemovePart(false, false, false, true);
+        if (up && enableUp && neighborUp.enableDn) {
+            string name         = "ribbon_up " + gameObject.GetInstanceID();
+            string loadName     = (neighborUp is DeviceRibbon) ? "Prefabs/RibbonPart" : "Prefabs/RibbonPartConnector";
+            partUp              = InstantiatePart(0, loadName, name);
+        }
+        if (dn && enableDn && neighborDn.enableUp) {
+            string name         = "ribbon_down " + gameObject.GetInstanceID();
+            string loadName     = (neighborDn is DeviceRibbon) ? "Prefabs/RibbonPart" : "Prefabs/RibbonPartConnector";
+            partDn              = InstantiatePart(180, loadName, name);
+        }
+        if (lt && enableLt && neighborLt.enableRt) {
+            string name         = "ribbon_left " + gameObject.GetInstanceID();
+            string loadName     = (neighborLt is DeviceRibbon) ? "Prefabs/RibbonPart" : "Prefabs/RibbonPartConnector";
+            partLt              = InstantiatePart(90, loadName, name);
+        }
+        if (rt && enableRt && neighborRt.enableLt) {
+            string name         = "ribbon_right " + gameObject.GetInstanceID();
+            string loadName     = (neighborRt is DeviceRibbon) ? "Prefabs/RibbonPart" : "Prefabs/RibbonPartConnector";
+            partRt              = InstantiatePart(270, loadName, name);
+        }
     }
 
     private GameObject InstantiatePart(int rotation, string loadName, string name) {
@@ -149,30 +140,34 @@ public class DeviceRibbon : Device {
                 Resources.Load(loadName) as GameObject,
                 gameObject.transform.position,
                 Quaternion.Euler(0, 0, rotation));
-        part.name       = name;
+        part.name = name;
         return part;
     }
 
-    private void RemovePart(bool up = true, bool down = true, bool left = true, bool right = true, bool respond = true) {
+    private void RemovePart(bool up = true, bool dn = true, bool lt = true, bool rt = true) {
         if (up) {
             Destroy(partUp);
             partUp = null;
-            if (respond && upNeighbor is DeviceRibbon) (upNeighbor as DeviceRibbon).RemovePart(false, true, false, false, false);
         }
-        if (down) {
-            Destroy(partDown);
-            partDown = null;
-            if (respond && downNeighbor is DeviceRibbon) (downNeighbor as DeviceRibbon).RemovePart(true, false, false, false, false);
+        if (dn) {
+            Destroy(partDn);
+            partDn = null;
         }
-        if (left) {
-            Destroy(partLeft);
-            partLeft = null;
-            if (respond && leftNeighbor is DeviceRibbon) (leftNeighbor as DeviceRibbon).RemovePart(false, false, false, true, false);
+        if (lt) {
+            Destroy(partLt);
+            partLt = null;
         }
-        if (right) {
-            Destroy(partRight);
-            partRight= null;
-            if (respond && rightNeighbor is DeviceRibbon) (rightNeighbor as DeviceRibbon).RemovePart(false, false, true, false, false);
+        if (rt) {
+            Destroy(partRt);
+            partRt = null;
         }
+    }
+
+    public override void DestroySelf() {
+        Destroy(partUp);
+        Destroy(partDn);
+        Destroy(partLt);
+        Destroy(partRt);
+        base.DestroySelf();
     }
 }

@@ -20,24 +20,24 @@ public class RibbonNode {
     public void mergeNode(RibbonNode node) {
         foreach (Device device in node.providers) {
             providers.Add(device);
-            if (device.upNode == node) device.upNode = this;
-            if (device.downNode == node) device.downNode = this;
-            if (device.leftNode == node) device.leftNode = this;
-            if (device.rightNode == node) device.rightNode = this;
+            if (device.nodeUp == node) device.nodeUp = this;
+            if (device.nodeDn == node) device.nodeDn = this;
+            if (device.nodeLt == node) device.nodeLt = this;
+            if (device.nodeRt == node) device.nodeRt = this;
         }
         foreach (Device device in node.requesters) {
             requesters.Add(device);
-            if (device.upNode == node) device.upNode = this;
-            if (device.downNode == node) device.downNode = this;
-            if (device.leftNode == node) device.leftNode = this;
-            if (device.rightNode == node) device.rightNode = this;
+            if (device.nodeUp == node) device.nodeUp = this;
+            if (device.nodeDn == node) device.nodeDn = this;
+            if (device.nodeLt == node) device.nodeLt = this;
+            if (device.nodeRt == node) device.nodeRt = this;
         }
         foreach (DeviceRibbon ribbon in node.ribbons) {
             ribbons.Add(ribbon);
-            if (ribbon.upNode == node) ribbon.upNode = this;
-            if (ribbon.downNode == node) ribbon.downNode = this;
-            if (ribbon.leftNode == node) ribbon.leftNode = this;
-            if (ribbon.rightNode == node) ribbon.rightNode = this;
+            if (ribbon.nodeUp == node) ribbon.nodeUp = this;
+            if (ribbon.nodeDn == node) ribbon.nodeDn = this;
+            if (ribbon.nodeLt == node) ribbon.nodeLt = this;
+            if (ribbon.nodeRt == node) ribbon.nodeRt = this;
         }
     }
 }

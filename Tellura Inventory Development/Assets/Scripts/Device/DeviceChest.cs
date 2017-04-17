@@ -12,9 +12,9 @@ public class DeviceChest : Device {
         gameObject.name     = "Chest " + gameObject.GetInstanceID();
         chestContents       = new Inventory(8);
         enableUp        = true;
-        enableDown      = true;
-        enableLeft      = true;
-        enableRight     = true;
+        enableDn      = true;
+        enableLt      = true;
+        enableRt     = true;
 	}
 
     private void Start() {

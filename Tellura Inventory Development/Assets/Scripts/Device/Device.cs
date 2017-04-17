@@ -5,158 +5,136 @@ using Tellura;
 
 public class Device : MonoBehaviour {
     protected bool      _enableUp;
-    protected bool      _enableDown;
-    protected bool      _enableLeft;
-    protected bool      _enableRight;
-    
-    public virtual bool enableUp {
-        get {
-            return _enableUp;
-        }
-        set {
-            _enableUp = value;
-        }
-    }
-    public virtual bool enableDown {
-        get {
-            return _enableDown;
-        }
-        set {
-            _enableDown = value;
-        }
-    }
-    public virtual bool enableLeft {
-        get {
-            return _enableLeft;
-        }
-        set {
-            _enableLeft = value;
-        }
-    }
-    public virtual bool enableRight {
-        get {
-            return _enableRight;
-        }
-        set {
-            _enableRight = value;
-        }
-    }
+    protected bool      _enableDn;
+    protected bool      _enableLt;
+    protected bool      _enableRt;
+    public virtual bool enableUp { get { return _enableUp; } set { _enableUp = value; } }
+    public virtual bool enableDn { get { return _enableDn; } set { _enableDn = value; } }
+    public virtual bool enableLt { get { return _enableLt; } set { _enableLt = value; } }
+    public virtual bool enableRt { get { return _enableRt; } set { _enableRt = value; } }
 
-    protected Device    upNeighbor;
-    protected Device    downNeighbor;
-    protected Device    leftNeighbor;
-    protected Device    rightNeighbor;
+    protected Device    neighborUp;
+    protected Device    neighborDn;
+    protected Device    neighborLt;
+    protected Device    neighborRt;
+    protected Device    this[int i] { get {
+        switch (i) {
+            case (0): return neighborUp;
+            case (1): return neighborDn;
+            case (2): return neighborLt;
+            case (3): return neighborRt;
+        }
+        return null;
+    } }
 
-    public RibbonNode   upNode;
-    public RibbonNode   downNode;
-    public RibbonNode   leftNode;
-    public RibbonNode   rightNode;
+    public RibbonNode   nodeUp;
+    public RibbonNode   nodeDn;
+    public RibbonNode   nodeLt;
+    public RibbonNode   nodeRt;
 
-    protected Device this[int i] {
-        get {
-            switch (i) {
-                case (0): return upNeighbor;
-                case (1): return downNeighbor;
-                case (2): return leftNeighbor;
-                case (3): return rightNeighbor;
+    private Device SuperDevice;
+
+    protected virtual void HelloNeighbor(bool up = true, bool dn = true, bool lt = true, bool rt = true, bool respond = true) {
+        RaycastHit currentHit;
+        Vector3 origin      = transform.position;
+        Vector3 originUp    = origin + new Vector3(0,1,-2);
+        Vector3 originDn    = origin + new Vector3(0,-1,-2);
+        Vector3 originLt    = origin + new Vector3(-1,0,-2);
+        Vector3 originRt    = origin + new Vector3(1,0,-2);
+
+        if (up) {
+            if (Physics.Raycast(originUp, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
+                neighborUp = currentHit.transform.gameObject.GetComponent<Device>();
+                if (respond) neighborUp.Notify(false, true, false, false);
             }
-            return null;
+        }
+        if (dn) {
+            if (Physics.Raycast(originDn, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
+                neighborDn = currentHit.transform.gameObject.GetComponent<Device>();
+                if (respond) neighborDn.Notify(true, false, false, false);
+            }
+        }
+        if (lt) {
+            if (Physics.Raycast(originLt, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
+                this.neighborLt = currentHit.transform.gameObject.GetComponent<Device>();
+                if (respond) neighborLt.Notify(false, false, false, true);
+            }
+        }
+        if (rt) {
+            if (Physics.Raycast(originRt, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
+                neighborRt = currentHit.transform.gameObject.GetComponent<Device>();
+                if (respond) neighborRt.Notify(false, false, true, false);
+            }
         }
     }
 
     /// <summary>
-    /// Sets the devices neighbor variables and updates neighbors' neighbor variables.
+    /// Tells this Device to re-evaluate its neighbor in the specified directions.
     /// </summary>
-    /// <param name="up">Check and set up neighbor.</param>
-    /// <param name="down">Check and set down neighbor.</param>
-    /// <param name="left">Check and set left neighbor.</param>
-    /// <param name="right">Check and set right neighbor.</param>
-    /// <param name="respond">Whether or not to tell neighbors to update themselves.</param>
-    public virtual void HelloNeighbor(bool up = true, bool down = true, bool left = true, bool right = true, bool respond = true) {
-        RaycastHit currentHit;
-        Vector3 origin          = transform.position;
-        Vector3 upOrigin        = origin + new Vector3(0,1,-2);
-        Vector3 downOrigin      = origin + new Vector3(0,-1,-2);
-        Vector3 leftOrigin      = origin + new Vector3(-1,0,-2);
-        Vector3 rightOrigin     = origin + new Vector3(1,0,-2);
-
-        if (up) {
-            if (Physics.Raycast(upOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
-                this.upNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
-                if (respond) this.upNeighbor.HelloNeighbor(false, true, false, false, false);
-            }
-        }
-        if (down) {
-            if (Physics.Raycast(downOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
-                this.downNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
-                if (respond) this.downNeighbor.HelloNeighbor(true, false, false, false, false);
-            }
-        }
-        if (left) {
-            if (Physics.Raycast(leftOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
-                this.leftNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
-                if (respond) this.leftNeighbor.HelloNeighbor(false, false, false, true, false);
-            }
-        }
-        if (right) {
-            if (Physics.Raycast(rightOrigin, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
-                this.rightNeighbor = currentHit.transform.gameObject.GetComponent<Device>();
-                if (respond) this.rightNeighbor.HelloNeighbor(false, false, true, false, false);
-            }
-        }
+    /// <param name="up">Look at upwards neighbor.</param>
+    /// <param name="dn">Look at downwards neighbor.</param>
+    /// <param name="lt">Look at leftwards neighbor.</param>
+    /// <param name="rt">Look at righwards neighbor.</param>
+    public virtual void Notify(bool up = false, bool dn = false, bool lt = false, bool rt = false) {
+        HelloNeighbor(up, dn, lt, rt, false);
     }
 
     public bool ToggleUp() {
         enableUp = enableUp ? false : true;
-        upNeighbor.HelloNeighbor(false, true, false, false, false);
+        if (neighborUp != null) neighborUp.Notify(false, true, false, false);
         return enableUp;
     }
 
     public bool ToggleDown() {
-        enableDown = enableDown ? false : true;
-        downNeighbor.HelloNeighbor(true, false, false, false, false);
-        return enableDown;
+        enableDn = enableDn ? false : true;
+        if (neighborDn != null) neighborDn.Notify(true, false, false, false);
+        return enableDn;
     }
 
     public bool ToggleLeft() {
-        enableLeft = enableLeft ? false : true;
-        leftNeighbor.HelloNeighbor(false, false, false, true, false);
-        return enableLeft;
+        enableLt = enableLt ? false : true;
+        if (neighborLt != null) neighborLt.Notify(false, false, false, true);
+        return enableLt;
     }
 
     public bool ToggleRight() {
-        enableRight = enableRight ? false : true;
-        rightNeighbor.HelloNeighbor(false, false, true, false, false);
-        return enableRight;
+        enableRt = enableRt ? false : true;
+        if (neighborRt != null) neighborRt.Notify(false, false, true, false);
+        return enableRt;
     }
 
     public string DEBUGReportNeighbors() {
-        string upName                           = "null";
-        string downName                         = "null";
-        string leftName                         = "null";
-        string rightName                        = "null";
-        if (upNeighbor != null) upName          = upNeighbor.name;
-        if (downNeighbor != null) downName      = downNeighbor.name;
-        if (leftNeighbor != null) leftName      = leftNeighbor.name;
-        if (rightNeighbor != null) rightName    = rightNeighbor.name;
-        if (!_enableUp) upName                  = "(X)"+upName;
-        if (!_enableDown) downName              = "(X)"+downName;
-        if (!_enableLeft) leftName              = "(X)"+leftName;
-        if (!_enableRight) rightName            = "(X)"+rightName;
+        string nameUp                   = "null";
+        string nameDn                   = "null";
+        string nameLt                   = "null";
+        string nameRt                   = "null";
+        if (neighborUp != null) nameUp  = neighborUp.name;
+        if (neighborDn != null) nameDn  = neighborDn.name;
+        if (neighborLt != null) nameLt  = neighborLt.name;
+        if (neighborRt != null) nameRt  = neighborRt.name;
+        if (!_enableUp) nameUp          = "(X)"+nameUp;
+        if (!_enableDn) nameDn          = "(X)"+nameDn;
+        if (!_enableLt) nameLt          = "(X)"+nameLt;
+        if (!_enableRt) nameRt          = "(X)"+nameRt;
 
         return (
             gameObject.name + " NEIGHBORS\n" +
-                "\tUP: \t" + upName +
-                "\n\tDOWN: \t" + downName +
-                "\n\tLEFT: \t" + leftName + 
-                "\n\tRIGHT: \t" + rightName);
+                "\tUP: \t" + nameUp +
+                "\n\tDOWN: \t" + nameDn +
+                "\n\tLEFT: \t" + nameLt + 
+                "\n\tRIGHT: \t" + nameRt
+        );
     }
 
-    public void destroySelf() {
-        if (upNeighbor != null) upNeighbor.downNeighbor = null;
-        if (downNeighbor != null) downNeighbor.upNeighbor = null;
-        if (leftNeighbor != null) leftNeighbor.rightNeighbor = null;
-        if (rightNeighbor != null) rightNeighbor.leftNeighbor = null;
+    public virtual void DestroySelf() {
+        enableUp = false;
+        enableDn = false;
+        enableLt = false;
+        enableRt = false;
+        if (neighborUp != null) neighborUp.Notify(false, true, false, false);
+        if (neighborDn != null) neighborDn.Notify(true, false, false, false);
+        if (neighborLt != null) neighborLt.Notify(false, false, false, true);
+        if (neighborRt != null) neighborRt.Notify(false, false, true, false);
         Destroy(gameObject);
     }
 }

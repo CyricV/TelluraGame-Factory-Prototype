@@ -135,7 +135,8 @@ public class InputController : MonoBehaviour {
     private void KeyCheck() {
         if (selectedDevice != null) {
             if (Input.GetKeyDown(KeyCode.Delete)) {
-                selectedDevice.GetComponent<Device>().destroySelf();
+                selectedDevice.GetComponent<Device>().DestroySelf();
+                Destroy(selectionIndicator);
                 selectedDevice = null;
             }
             if (Input.GetKeyDown(KeyCode.UpArrow)) {
