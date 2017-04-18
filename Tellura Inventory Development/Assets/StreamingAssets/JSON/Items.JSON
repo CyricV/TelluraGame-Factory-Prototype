@@ -50,5 +50,15 @@
                         "stackMax":32,
                         "displayName":"Copper Plate"
                 },
+                {
+                        "name":"dust_crystal",
+                        "stackMax":32,
+                        "displayName":"Crystal Dust"
+                },
+                {
+                        "name":"plate_glass",
+                        "stackMax":32,
+                        "displayName":"Glass"
+                },
         ]
 }

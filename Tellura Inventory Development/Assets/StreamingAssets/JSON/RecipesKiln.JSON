@@ -1,0 +1,14 @@
+{
+        "kiln":[
+                {
+                        "input":"clay",
+                        "output":"plate_ceramic",
+                        "sol":8
+                },
+                {
+                        "input":"dust_crystal",
+                        "output":"plate_glass",
+                        "sol":8
+                },
+        ]
+}

@@ -103,6 +103,25 @@ public class Device : MonoBehaviour {
         return enableRt;
     }
 
+    /// <summary>
+    /// Request an item from this device.
+    /// </summary>
+    /// <param name="item">The item you want, used as a template.</param>
+    /// <param name="amount">How many of the item you want. Zero or less will use item's stackCurrent.</param>
+    /// <returns>An item with as much of the requested amount as possible. Or null if none are available.</returns>
+    public virtual InventoryItem RequestItem(InventoryItem item, int amount = 0) {
+        return null;
+    }
+
+    /// <summary>
+    /// Give an item to this device.
+    /// </summary>
+    /// <param name="item">The item being given.</param>
+    /// <returns></returns>
+    public virtual InventoryItem GiveItem(InventoryItem item) {
+        return null;
+    }
+
     public string DEBUGReportNeighbors() {
         string nameUp                   = "null";
         string nameDn                   = "null";
