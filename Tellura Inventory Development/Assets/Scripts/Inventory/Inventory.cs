@@ -44,11 +44,8 @@ public class Inventory {
     /// <returns>The amount of items that were not able to be added.</returns> 
     public int addItem(string name, int amount) {
         InventoryItem itemTemplate;
-        // Invalid id check
         if (!BackstageActor.masterList.items.TryGetValue(name, out itemTemplate)) return -1;
-        // Array of vacant indexes to be built during first loop.
-        int[] vacantSlotArray           = new int[this._size];
-        // Track vacantSlotArray's current index
+        int[] vacantSlotArray           = new int[_size];
         int vacantSlotArrayIndex        = 0;
 
         // Loop through and fill existing item stacks first.
@@ -109,7 +106,7 @@ public class Inventory {
     /// <param name="item">Item to be added.</param>
     /// <param name="index">The index at which to add the item.</param>
     /// <returns>An item with any amount not able to be added in its stack.</returns>
-    public InventoryItem addItemAtIndex(InventoryItem item, int index) {
+    public InventoryItem AddItemAtIndex(InventoryItem item, int index) {
         InventoryItem targetItemSlot = this.contents.contentsArray[index];
 
         // If the target slot is empty
@@ -157,7 +154,7 @@ public class Inventory {
     /// <param name="index">The index at which to remove the item.</param>
     /// <param name="amount">OPTIONAL Ammount to attempt to remove.</param>
     /// <returns>The removed Item. Durrent stack size may not match requested amount if not enough was available in the targeted slot</returns>
-    public InventoryItem removeItemAtIndex(int index, int amount = Int32.MaxValue) {
+    public InventoryItem TakeItemAtIndex(int index, int amount = int.MaxValue) {
         InventoryItem returnItem = null;
 
         // Nothing in the target slot.

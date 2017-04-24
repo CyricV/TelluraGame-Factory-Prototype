@@ -25,13 +25,25 @@ public class BackstageActor : MonoBehaviour {
 
         Inventory testPlayerInventory = new Inventory(100);
 
-        GameObject chest1 = makeChest(0, 0);
-        GameObject chest2 = makeChest(1, 0);
-        chest1.GetComponent<DeviceChest>().chestContents.addItem("dust_ancient", 100);
-        print(chest1.GetComponent<DeviceChest>().chestContents.DEBUGReportInventory());
+        //GameObject chest1 = makeChest(0, 0);
+        //GameObject chest2 = makeChest(1, 0);
+        //chest1.GetComponent<DeviceChest>().chestContents.addItem("dust_ancient", 100);
+        //print(chest1.GetComponent<DeviceChest>().chestContents.DEBUGReportInventory());
 
-        makeKiln(4, 0);
+        //makeKiln(4, 0);
 
+        makeChest(-1, 0);
+        makeKiln(1, 0);
+
+        makeRibbon(-1, 1);
+        makeRibbon(0, 1);
+        makeRibbon(1, 1);
+
+        makeRibbon(-1, 2);
+        makeRibbon(-1, 3);
+        makeRibbon(0, 3);
+        makeRibbon(1, 3);
+        makeRibbon(1, 2);
     }
     
     void Update() {

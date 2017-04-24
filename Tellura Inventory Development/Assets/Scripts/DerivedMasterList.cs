@@ -47,8 +47,6 @@ public class DerivedMasterList {
         }
     }
 
-
-
     public string DEBUGPrintItemMasterList() {
         string itemMasterList = "Item Master List:\n";
         foreach (KeyValuePair<string, InventoryItem> pair in _items) {

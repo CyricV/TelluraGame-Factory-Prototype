@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Tellura;
+using Keywords;
 
 public class InputController : MonoBehaviour {
     GameObject  selectionIndicatorLOAD;
@@ -21,14 +22,14 @@ public class InputController : MonoBehaviour {
     GameObject  cursorIndicator;
 
     private void Start() {
-        selectionIndicatorLOAD  = Resources.Load("Prefabs/SelectionIndicator") as GameObject;
-        cursorIndicatorLOAD     = Resources.Load("Prefabs/CursorIndicator") as GameObject;
-        ribbonLOAD              = Resources.Load("Prefabs/Ribbon") as GameObject;
-        ribbonSpriteLOAD        = Resources.Load("Sprites/Devices/Ribbon") as Sprite;
-        chestLOAD               = Resources.Load("Prefabs/Chest") as GameObject;
-        chestSpriteLOAD         = Resources.Load("Sprites/Devices/Chest") as Sprite;
-        kilnLOAD                = Resources.Load("Prefabs/Kiln") as GameObject;
-        kilnSpriteLOAD          = Resources.Load("Sprites/Devices/Kiln") as Sprite;
+        selectionIndicatorLOAD  = Resources.Load(Keywords.Path.PF_UI_SELECTION) as GameObject;
+        cursorIndicatorLOAD     = Resources.Load(Keywords.Path.PF_UI_CURSOR) as GameObject;
+        ribbonLOAD              = Resources.Load(Keywords.Path.PF_RIBBON) as GameObject;
+        ribbonSpriteLOAD        = Resources.Load(Keywords.Path.SPRITE_RIBBON) as Sprite;
+        chestLOAD               = Resources.Load(Keywords.Path.PF_CHEST) as GameObject;
+        chestSpriteLOAD         = Resources.Load(Keywords.Path.SPRITE_CHEST) as Sprite;
+        kilnLOAD                = Resources.Load(Keywords.Path.PF_KILN) as GameObject;
+        kilnSpriteLOAD          = Resources.Load(Keywords.Path.SPRITE_KILN) as Sprite;
         BuildMode               = true;
         deviceToPlace           = null;
     }
