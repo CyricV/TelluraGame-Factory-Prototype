@@ -2,53 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Tellura;
+using Keywords;
 
 public class Device : MonoBehaviour {
-    public      DevicePort portUp { get { return _portUp; } }
-    protected   DevicePort _portUp;
-    public      DevicePort portDn { get { return _portDn; } }
-    protected   DevicePort _portDn;
-    public      DevicePort portLt { get { return _portLt; } }
-    protected   DevicePort _portLt;
-    public      DevicePort portRt { get { return _portRt; } }
-    protected   DevicePort _portRt;
+    public virtual  DevicePort  portUp { get { return _portUp; } }
+    protected       DevicePort  _portUp;
+    public virtual  DevicePort  portDn { get { return _portDn; } }
+    protected       DevicePort  _portDn;
+    public virtual  DevicePort  portLt { get { return _portLt; } }
+    protected       DevicePort  _portLt;
+    public virtual  DevicePort  portRt { get { return _portRt; } }
+    protected       DevicePort  _portRt;
 
-    protected bool      _enableUp;
-    protected bool      _enableDn;
-    protected bool      _enableLt;
-    protected bool      _enableRt;
-    /// <summary>
-    /// If this device is allowed to connect to its upwards neighbor.
-    /// </summary>
-    public virtual bool enableUp { get { return _enableUp; } set { _enableUp = value; } }
-    /// <summary>
-    /// If this device is allowed to connect to its downwards neighbor.
-    /// </summary>
-    public virtual bool enableDn { get { return _enableDn; } set { _enableDn = value; } }
-    /// <summary>
-    /// If this device is allowed to connect to its leftwards neighbor.
-    /// </summary>
-    public virtual bool enableLt { get { return _enableLt; } set { _enableLt = value; } }
-    /// <summary>
-    /// If this device is allowed to connect to its rightwards neighbor.
-    /// </summary>
-    public virtual bool enableRt { get { return _enableRt; } set { _enableRt = value; } }
     /// <summary>
     /// If this device is connected to its upwards neighbor.
     /// </summary>
-    public bool         connectedUp { get { return (enableUp && _neighborUp != null && _neighborUp.enableDn); } }
+    public bool connectedUp { get { return (portUp != null && _neighborUp is Device && _neighborUp.portDn !=null); } }
     /// <summary>
     /// If this device is connected to its downwards neighbor.
     /// </summary>
-    public bool         connectedDn { get { return (enableDn && _neighborDn != null && _neighborDn.enableUp); } }
+    public bool connectedDn { get { return (portDn != null && _neighborDn is Device && _neighborDn.portUp !=null); } }
     /// <summary>
     /// If this device is connected to its leftwards neighbor.
     /// </summary>
-    public bool         connectedLt { get { return (enableLt && _neighborLt != null && _neighborLt.enableRt); } }
+    public bool connectedLt { get { return (portLt != null && _neighborLt is Device && _neighborLt.portRt !=null); } }
     /// <summary>
     /// If this device is connected to its rightwards neighbor.
     /// </summary>
-    public bool         connectedRt { get { return (enableRt && _neighborRt != null && _neighborRt.enableLt); } }
+    public bool connectedRt { get { return (portRt != null && _neighborRt is Device && _neighborRt.portLt !=null); } }
 
     /// <summary>
     /// Upwards neighboring device.
@@ -80,18 +61,21 @@ public class Device : MonoBehaviour {
         return null;
     } }
 
-    protected RibbonGraph   _graphUp;
-    public RibbonGraph      graphUp { get { return _graphUp; } set { _graphUp = value; } }
-    protected RibbonGraph   _graphDn;
-    public RibbonGraph      graphDn { get { return _graphDn; } set { _graphDn = value; } }
-    protected RibbonGraph   _graphLt;
-    public RibbonGraph      graphLt { get { return _graphLt; } set { _graphLt = value; } }
-    protected RibbonGraph   _graphRt;
-    public RibbonGraph      graphRt { get { return _graphRt; } set { _graphRt = value; } }
     public int              dijkstraDistance;
     public Device           dijkstraPrevious;
 
-    private Device SuperDevice;
+    //private Device SuperDevice;
+
+    protected virtual void Awake() {
+        _portUp = new DevicePort();
+        _portDn = new DevicePort();
+        _portLt = new DevicePort();
+        _portRt = new DevicePort();
+    }
+
+    protected virtual void Start() {
+        HelloNeighbor();
+    }
 
     protected virtual void HelloNeighbor(bool up = true, bool dn = true, bool lt = true, bool rt = true, bool respond = true) {
         RaycastHit currentHit;
@@ -138,28 +122,56 @@ public class Device : MonoBehaviour {
         HelloNeighbor(up, dn, lt, rt, false);
     }
 
-    public bool ToggleUp() {
-        enableUp = enableUp ? false : true;
+    public virtual bool ToggleUp() {
+        bool returnValue;
+        if (portUp != null) {
+            _portUp = null;
+            returnValue = false;
+        } else {
+            _portUp = new DevicePort();
+            returnValue = true;
+        }
         if (_neighborUp != null) _neighborUp.Notify(false, true, false, false);
-        return enableUp;
+        return returnValue;
     }
 
-    public bool ToggleDown() {
-        enableDn = enableDn ? false : true;
+    public virtual bool ToggleDn() {
+        bool returnValue;
+        if (portDn != null) {
+            _portDn = null;
+            returnValue = false;
+        } else {
+            _portDn = new DevicePort();
+            returnValue = true;
+        }
         if (_neighborDn != null) _neighborDn.Notify(true, false, false, false);
-        return enableDn;
+        return returnValue;
     }
 
-    public bool ToggleLeft() {
-        enableLt = enableLt ? false : true;
+    public virtual bool ToggleLt() {
+        bool returnValue;
+        if (portLt != null) {
+            _portLt = null;
+            returnValue = false;
+        } else {
+            _portLt = new DevicePort();
+            returnValue = true;
+        }
         if (_neighborLt != null) _neighborLt.Notify(false, false, false, true);
-        return enableLt;
+        return returnValue;
     }
 
-    public bool ToggleRight() {
-        enableRt = enableRt ? false : true;
+    public virtual bool ToggleRt() {
+        bool returnValue;
+        if (portRt != null) {
+            _portRt = null;
+            returnValue = false;
+        } else {
+            _portRt = new DevicePort();
+            returnValue = true;
+        }
         if (_neighborRt != null) _neighborRt.Notify(false, false, true, false);
-        return enableRt;
+        return returnValue;
     }
 
     /// <summary>
@@ -185,10 +197,10 @@ public class Device : MonoBehaviour {
     }
 
     public virtual void DestroySelf() {
-        enableUp = false;
-        enableDn = false;
-        enableLt = false;
-        enableRt = false;
+        _portUp = null;
+        _portDn = null;
+        _portLt = null;
+        _portRt = null;
         if (_neighborUp != null) _neighborUp.Notify(false, true, false, false);
         if (_neighborDn != null) _neighborDn.Notify(true, false, false, false);
         if (_neighborLt != null) _neighborLt.Notify(false, false, false, true);

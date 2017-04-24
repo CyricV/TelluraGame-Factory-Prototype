@@ -1,35 +1,45 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Keywords;
 
 public class DeviceKiln : Device {
-    public override bool enableUp { get { return _enableUp; } set { _enableUp = value; } }
-    public override bool enableDn { get { return false; } }
-    public override bool enableLt { get { return false; } }
-    public override bool enableRt { get { return false; } }
     private Inventory inventory;
     private RecipeKiln currentRecipe;
 
-	private void Awake () {
+    protected override void Awake() {
         gameObject.name = "Kiln " + gameObject.GetInstanceID();
         inventory       = new Inventory(1);
-        enableUp        = true;
-        enableDn        = false;
-        enableLt        = false;
-        enableRt        = false;
-	}
-
-    private void Start() {
-        this.HelloNeighbor();
+        _portUp         = new DevicePort(Keywords.Names.PORT_TYPE_REQUESTER);
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    protected override void Start() {
+        base.Start();
+    }
+
+    // Update is called once per frame
+    void Update () {
 		if(inventory.GetItemAtIndex(0) != null
         && BackstageActor.masterList.kilnRecipes.TryGetValue(inventory.GetItemAtIndex(0).name, out currentRecipe)) {
             ProcessInventory();
         }
 	}
+
+    public override bool ToggleUp() {
+        return true;
+    }
+
+    public override bool ToggleDn() {
+        return false;
+    }
+
+    public override bool ToggleLt() {
+        return false;
+    }
+
+    public override bool ToggleRt() {
+        return false;
+    }
 
     public override InventoryItem RequestItem(InventoryItem item, int amount = 0) {
         return base.RequestItem(item, amount);

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Keywords;
 
 /// <summary>
 /// Basic storage vessel with an inventory of 8.
@@ -8,21 +9,32 @@ using UnityEngine;
 public class DeviceChest : Device {
     public Inventory chestContents;
 
-	private void Awake () {
+    protected override void Awake() {
+        _portUp = new DevicePort(Keywords.Names.PORT_TYPE_PROVIDER);
+        _portDn = new DevicePort(Keywords.Names.PORT_TYPE_PROVIDER);
+        _portLt = new DevicePort(Keywords.Names.PORT_TYPE_PROVIDER);
+        _portRt = new DevicePort(Keywords.Names.PORT_TYPE_PROVIDER);
         gameObject.name     = "Chest " + gameObject.GetInstanceID();
         chestContents       = new Inventory(8);
-        enableUp        = true;
-        enableDn      = true;
-        enableLt      = true;
-        enableRt     = true;
-	}
-
-    private void Start() {
-        HelloNeighbor();
     }
 
-    // Update is called once per frame
-    void Update () {
-		
-	}
+    protected override void Start() {
+        base.Start();
+    }
+
+    public override bool ToggleUp() {
+        return true;
+    }
+
+    public override bool ToggleDn() {
+        return true;
+    }
+
+    public override bool ToggleLt() {
+        return true;
+    }
+
+    public override bool ToggleRt() {
+        return true;
+    }
 }

@@ -30,24 +30,24 @@ public class RibbonGraph {
     public void mergeGraph(RibbonGraph graph) {
         foreach (Device device in graph.providers) {
             providers.Add(device);
-            if (device.graphUp == graph) device.graphUp = this;
-            if (device.graphDn == graph) device.graphDn = this;
-            if (device.graphLt == graph) device.graphLt = this;
-            if (device.graphRt == graph) device.graphRt = this;
+            if (device.portUp.graph == graph) device.portUp.graph = this;
+            if (device.portDn.graph == graph) device.portDn.graph = this;
+            if (device.portLt.graph == graph) device.portLt.graph = this;
+            if (device.portRt.graph == graph) device.portRt.graph = this;
         }
         foreach (Device device in graph.requesters) {
             requesters.Add(device);
-            if (device.graphUp == graph) device.graphUp = this;
-            if (device.graphDn == graph) device.graphDn = this;
-            if (device.graphLt == graph) device.graphLt = this;
-            if (device.graphRt == graph) device.graphRt = this;
+            if (device.portUp.graph == graph) device.portUp.graph = this;
+            if (device.portDn.graph == graph) device.portDn.graph = this;
+            if (device.portLt.graph == graph) device.portLt.graph = this;
+            if (device.portRt.graph == graph) device.portRt.graph = this;
         }
         foreach (DeviceRibbon ribbon in graph.ribbons) {
             ribbons.Add(ribbon);
-            if (ribbon.graphUp == graph) ribbon.graphUp = this;
-            if (ribbon.graphDn == graph) ribbon.graphDn = this;
-            if (ribbon.graphLt == graph) ribbon.graphLt = this;
-            if (ribbon.graphRt == graph) ribbon.graphRt = this;
+            if (ribbon.portUp.graph == graph) ribbon.portUp.graph = this;
+            if (ribbon.portDn.graph == graph) ribbon.portDn.graph = this;
+            if (ribbon.portLt.graph == graph) ribbon.portLt.graph = this;
+            if (ribbon.portRt.graph == graph) ribbon.portRt.graph = this;
         }
     }
 

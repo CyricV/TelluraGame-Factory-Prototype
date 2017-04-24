@@ -144,13 +144,13 @@ public class InputController : MonoBehaviour {
                 selectedDevice.GetComponent<Device>().ToggleUp();
             }
             if (Input.GetKeyDown(KeyCode.DownArrow)) {
-                selectedDevice.GetComponent<Device>().ToggleDown();
+                selectedDevice.GetComponent<Device>().ToggleDn();
             }
             if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-                selectedDevice.GetComponent<Device>().ToggleLeft();
+                selectedDevice.GetComponent<Device>().ToggleLt();
             }
             if (Input.GetKeyDown(KeyCode.RightArrow)) {
-                selectedDevice.GetComponent<Device>().ToggleRight();
+                selectedDevice.GetComponent<Device>().ToggleRt();
             }
         }
         if (Input.GetKeyDown(KeyCode.Alpha0)) {

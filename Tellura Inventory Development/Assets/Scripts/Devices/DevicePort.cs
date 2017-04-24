@@ -1,25 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Keywords;
 
 public class DevicePort {
-    public int direction{
-        get { return _direction; }
-        set {
-            value = Mathf.Abs(value);
-            if (value <= 45)                        _direction = 0;
-            else if (45 > value && value <= 135)    _direction = 90;
-            else if (135 > value && value <= 225)   _direction = 180;
-            else if (225 > value)                   _direction = 270;
-        }
-    }
-    private int _direction;
-    public RibbonGraph graph;
-    public bool enabled;
+    public RibbonGraph  graph;
+    public string       portType { get { return _portType; } }
+    private string      _portType;
 
-    public DevicePort(int direction) {
-        this.direction  = direction;
+    public DevicePort(string portType = null) {
         graph           = null;
-        enabled         = false;
+        _portType       = portType;
+        if (_portType != Keywords.Names.PORT_TYPE_PROVIDER ||
+            _portType != Keywords.Names.PORT_TYPE_REQUESTER) {
+            _portType   = null;
+        }
     }
 }

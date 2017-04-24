@@ -32,6 +32,17 @@ namespace Keywords {
         public const string SPRITE_KILN         = "Sprites/Devices/Kiln";
         public const string SPRITE_RIBBON       = "Sprites/Devices/Ribbon";
         public const string SPRITE_MACHINEBLOCK = "Sprites/Devices/MachineBlock";
+    }
 
+    public class Names {
+        public const string PORT_TYPE_REQUESTER = "REQUESTER";
+        public const string PORT_TYPE_PROVIDER  = "PROVIDER";
+    }
+
+    public class Rotations {
+        public const int UP                     = 0;
+        public const int DN                     = 180;
+        public const int LT                     = 90;
+        public const int RT                     = 270;
     }
 }
