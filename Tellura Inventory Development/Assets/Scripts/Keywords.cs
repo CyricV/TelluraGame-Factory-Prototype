@@ -37,6 +37,7 @@ namespace Keywords {
     public class Names {
         public const string PORT_TYPE_REQUESTER = "REQUESTER";
         public const string PORT_TYPE_PROVIDER  = "PROVIDER";
+        public const string PORT_TYPE_RIBBON    = "RIBBON";
     }
 
     public class Rotations {

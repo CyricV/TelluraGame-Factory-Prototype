@@ -51,6 +51,7 @@ public class Device : MonoBehaviour {
     /// </summary>
     public      Device  neighborRt { get { return _neighborRt; } }
     protected   Device  _neighborRt;
+
     protected   Device  this[int i] { get {
         switch (i) {
             case (0): return _neighborUp;
@@ -61,16 +62,13 @@ public class Device : MonoBehaviour {
         return null;
     } }
 
-    public int              dijkstraDistance;
-    public Device           dijkstraPrevious;
-
     //private Device SuperDevice;
 
     protected virtual void Awake() {
-        _portUp = new DevicePort();
-        _portDn = new DevicePort();
-        _portLt = new DevicePort();
-        _portRt = new DevicePort();
+        _portUp = new DevicePort(this);
+        _portDn = new DevicePort(this);
+        _portLt = new DevicePort(this);
+        _portRt = new DevicePort(this);
     }
 
     protected virtual void Start() {
@@ -88,27 +86,32 @@ public class Device : MonoBehaviour {
         if (up) {
             if (Physics.Raycast(originUp, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
                 _neighborUp = currentHit.transform.gameObject.GetComponent<Device>();
+                if(_portUp != null) _portUp.companion = _neighborUp.portDn;
                 if (respond) _neighborUp.Notify(false, true, false, false);
             }
         }
         if (dn) {
             if (Physics.Raycast(originDn, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
                 _neighborDn = currentHit.transform.gameObject.GetComponent<Device>();
+                if(_portDn != null) _portDn.companion = _neighborDn.portUp;
                 if (respond) _neighborDn.Notify(true, false, false, false);
             }
         }
         if (lt) {
             if (Physics.Raycast(originLt, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
                 this._neighborLt = currentHit.transform.gameObject.GetComponent<Device>();
+                if(_portLt != null) _portLt.companion = _neighborLt.portRt;
                 if (respond) _neighborLt.Notify(false, false, false, true);
             }
         }
         if (rt) {
             if (Physics.Raycast(originRt, Vector3.forward, out currentHit, Mathf.Infinity, GameValues.LM_DEVICE)) {
                 _neighborRt = currentHit.transform.gameObject.GetComponent<Device>();
+                if(_portRt != null) _portRt.companion = _neighborRt.portLt;
                 if (respond) _neighborRt.Notify(false, false, true, false);
             }
         }
+        //print(DEBUGReportPorts());
     }
 
     /// <summary>
@@ -128,7 +131,7 @@ public class Device : MonoBehaviour {
             _portUp = null;
             returnValue = false;
         } else {
-            _portUp = new DevicePort();
+            _portUp = new DevicePort(this);
             returnValue = true;
         }
         if (_neighborUp != null) _neighborUp.Notify(false, true, false, false);
@@ -141,7 +144,7 @@ public class Device : MonoBehaviour {
             _portDn = null;
             returnValue = false;
         } else {
-            _portDn = new DevicePort();
+            _portDn = new DevicePort(this);
             returnValue = true;
         }
         if (_neighborDn != null) _neighborDn.Notify(true, false, false, false);
@@ -154,7 +157,7 @@ public class Device : MonoBehaviour {
             _portLt = null;
             returnValue = false;
         } else {
-            _portLt = new DevicePort();
+            _portLt = new DevicePort(this);
             returnValue = true;
         }
         if (_neighborLt != null) _neighborLt.Notify(false, false, false, true);
@@ -167,7 +170,7 @@ public class Device : MonoBehaviour {
             _portRt = null;
             returnValue = false;
         } else {
-            _portRt = new DevicePort();
+            _portRt = new DevicePort(this);
             returnValue = true;
         }
         if (_neighborRt != null) _neighborRt.Notify(false, false, true, false);
@@ -191,9 +194,6 @@ public class Device : MonoBehaviour {
     /// <returns>An item with any amount that could not be added in its stack, or null if everything was added.</returns>
     public virtual InventoryItem GiveItem(InventoryItem item) {
         return item;
-    }
-
-    protected virtual void ManageGraph() {
     }
 
     public virtual void DestroySelf() {
@@ -228,6 +228,56 @@ public class Device : MonoBehaviour {
                 "\n\tDOWN: \t" + nameDn +
                 "\n\tLEFT: \t" + nameLt + 
                 "\n\tRIGHT: \t" + nameRt
+        );
+    }
+
+    public string DEBUGReportPorts() {
+        string dataUp;
+        string dataDn;
+        string dataLt;
+        string dataRt;
+        if (_portUp == null) {
+            dataUp      = "Off\n";
+        } else {
+            dataUp      = "Type: " + _portUp.portType + "\n";
+            if (_portUp.companion != null) {
+                dataUp  += "Companion Type: " + _portUp.companion.portType +"\n";
+            }
+            dataUp      += "Siblings: " + _portUp.siblings.Count + "\n";
+        }
+        if (_portDn == null) {
+            dataDn      = "Off\n";
+        } else {
+            dataDn      = "Type: " + _portDn.portType + "\n";
+            if (_portDn.companion != null) {
+                dataDn  += "Companion Type: " + _portDn.companion.portType +"\n";
+            }
+            dataDn      += "Siblings: " + _portDn.siblings.Count + "\n";
+        }
+        if (_portLt == null) {
+            dataLt      = "Off\n";
+        } else {
+            dataLt      = "Type: " + _portLt.portType + "\n";
+            if (_portLt.companion != null) {
+                dataLt  += "Companion Type: " + _portLt.companion.portType +"\n";
+            }
+            dataLt      += "Siblings: " + _portLt.siblings.Count + "\n";
+        }
+        if (_portRt == null) {
+            dataRt      = "Off\n";
+        } else {
+            dataRt      = "Type: " + _portRt.portType + "\n";
+            if (_portRt.companion != null) {
+                dataRt  += "Companion Type: " + _portRt.companion.portType +"\n";
+            }
+            dataRt      += "Siblings: " + _portRt.siblings.Count + "\n";
+        }
+        return (
+            "PORT REPORT FROM " + gameObject.name + "\n" +
+            "UP\n" + dataUp + "\n" +
+            "DOWN\n" + dataDn + "\n" +
+            "LEFT\n" + dataLt + "\n" +
+            "RIGHT\n" + dataRt + "\n"
         );
     }
 }

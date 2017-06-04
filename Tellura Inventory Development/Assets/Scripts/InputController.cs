@@ -53,16 +53,16 @@ public class InputController : MonoBehaviour {
         int scrollSpeed     = Mathf.RoundToInt(Mathf.Lerp(GameValues.MIN_SCROLL_SPEED, GameValues.MAX_SCROLL_SPEED, origin.z/GameValues.MAX_CAMERA_HEIGHT));
 
         //horizontal camera movement
-        if(xpos < GameValues.SCROLL_ACTIVATE_WIDTH) {
+        if(xpos < GameValues.SCROLL_ACTIVATE_WIDTH || Input.GetKey(KeyCode.A)) {
             movement.x -= scrollSpeed;
-        } else if(xpos > Screen.width - GameValues.SCROLL_ACTIVATE_WIDTH) {
+        } else if(xpos > Screen.width - GameValues.SCROLL_ACTIVATE_WIDTH || Input.GetKey(KeyCode.D)) {
             movement.x += scrollSpeed;
         }
  
         //vertical camera movement
-        if(ypos < GameValues.SCROLL_ACTIVATE_WIDTH) {
+        if(ypos < GameValues.SCROLL_ACTIVATE_WIDTH || Input.GetKey(KeyCode.S)) {
             movement.y -= scrollSpeed;
-        } else if(ypos > Screen.height - GameValues.SCROLL_ACTIVATE_WIDTH) {
+        } else if(ypos > Screen.height - GameValues.SCROLL_ACTIVATE_WIDTH || Input.GetKey(KeyCode.W)) {
             movement.y += scrollSpeed;
         }
 

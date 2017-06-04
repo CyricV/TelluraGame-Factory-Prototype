@@ -11,12 +11,18 @@ public class DeviceRibbon : Device {
 
     protected override void Awake() {
         gameObject.name = "Ribbon " + gameObject.GetInstanceID();
-        base.Awake();
+        _portUp = new DevicePort(this, Keywords.Names.PORT_TYPE_RIBBON);
+        _portDn = new DevicePort(this, Keywords.Names.PORT_TYPE_RIBBON);
+        _portLt = new DevicePort(this, Keywords.Names.PORT_TYPE_RIBBON);
+        _portRt = new DevicePort(this, Keywords.Names.PORT_TYPE_RIBBON);
+        _portUp.siblings.AddRange(new DevicePort[] { _portDn, _portLt, _portRt });
+        _portDn.siblings.AddRange(new DevicePort[] { _portUp, _portLt, _portRt });
+        _portLt.siblings.AddRange(new DevicePort[] { _portUp, _portDn, _portRt });
+        _portRt.siblings.AddRange(new DevicePort[] { _portUp, _portDn, _portLt });
     }
 
     protected override void Start() {
         base.Start();
-        ManageGraph();
     }
 
     protected override void HelloNeighbor(bool up = true, bool dn = true, bool lt = true, bool rt = true, bool respond = true) {
@@ -32,10 +38,13 @@ public class DeviceRibbon : Device {
     public override bool ToggleUp() {
         bool returnValue;
         if (portUp != null) {
+            _portDn.siblings.Remove(_portUp);
+            _portLt.siblings.Remove(_portUp);
+            _portRt.siblings.Remove(_portUp);
             _portUp = null;
             returnValue = false;
         } else {
-            _portUp = new DevicePort();
+            _portUp = new DevicePort(this, Keywords.Names.PORT_TYPE_RIBBON, null, new List<DevicePort>(new DevicePort[] { _portDn, _portLt, _portRt }));
             returnValue = true;
         }
         ManagePart(true, false, false, false);
@@ -46,10 +55,13 @@ public class DeviceRibbon : Device {
     public override bool ToggleDn() {
         bool returnValue;
         if (portDn != null) {
+            _portUp.siblings.Remove(_portDn);
+            _portLt.siblings.Remove(_portDn);
+            _portRt.siblings.Remove(_portDn);
             _portDn = null;
             returnValue = false;
         } else {
-            _portDn = new DevicePort();
+            _portDn = new DevicePort(this, Keywords.Names.PORT_TYPE_RIBBON, null, new List<DevicePort>(new DevicePort[] { _portUp, _portLt, _portRt }));
             returnValue = true;
         }
         ManagePart(false, true, false, false);
@@ -60,10 +72,13 @@ public class DeviceRibbon : Device {
     public override bool ToggleLt() {
         bool returnValue;
         if (portLt != null) {
+            _portUp.siblings.Remove(_portLt);
+            _portDn.siblings.Remove(_portLt);
+            _portRt.siblings.Remove(_portLt);
             _portLt = null;
             returnValue = false;
         } else {
-            _portLt = new DevicePort();
+            _portLt = new DevicePort(this, Keywords.Names.PORT_TYPE_RIBBON, null, new List<DevicePort>(new DevicePort[] { _portUp, _portDn, _portRt }));
             returnValue = true;
         }
         ManagePart(false, false, true, false);
@@ -74,18 +89,18 @@ public class DeviceRibbon : Device {
     public override bool ToggleRt() {
         bool returnValue;
         if (portRt != null) {
+            _portUp.siblings.Remove(_portRt);
+            _portDn.siblings.Remove(_portRt);
+            _portLt.siblings.Remove(_portRt);
             _portRt = null;
             returnValue = false;
         } else {
-            _portRt = new DevicePort();
+            _portRt = new DevicePort(this, Keywords.Names.PORT_TYPE_RIBBON, null, new List<DevicePort>(new DevicePort[] { _portUp, _portDn, _portLt}));
             returnValue = true;
         }
         ManagePart(false, false, false, true);
         if (_neighborRt != null) _neighborRt.Notify(false, false, true, false);
         return returnValue;
-    }
-
-    protected override void ManageGraph() {
     }
 
     private void ManagePart(bool up = true, bool dn = true, bool lt = true, bool rt = true) {

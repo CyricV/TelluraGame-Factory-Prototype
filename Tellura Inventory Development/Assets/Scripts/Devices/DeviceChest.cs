@@ -10,12 +10,13 @@ public class DeviceChest : Device {
     public Inventory chestContents;
 
     protected override void Awake() {
-        _portUp = new DevicePort(Keywords.Names.PORT_TYPE_PROVIDER);
-        _portDn = new DevicePort(Keywords.Names.PORT_TYPE_PROVIDER);
-        _portLt = new DevicePort(Keywords.Names.PORT_TYPE_PROVIDER);
-        _portRt = new DevicePort(Keywords.Names.PORT_TYPE_PROVIDER);
+        _portUp = new DevicePort(this, Keywords.Names.PORT_TYPE_PROVIDER);
+        _portDn = new DevicePort(this, Keywords.Names.PORT_TYPE_PROVIDER);
+        _portLt = new DevicePort(this, Keywords.Names.PORT_TYPE_PROVIDER);
+        _portRt = new DevicePort(this, Keywords.Names.PORT_TYPE_PROVIDER);
         gameObject.name     = "Chest " + gameObject.GetInstanceID();
         chestContents       = new Inventory(8);
+        print(gameObject.name + " is Awake");
     }
 
     protected override void Start() {

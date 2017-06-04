@@ -10,7 +10,8 @@ public class DeviceKiln : Device {
     protected override void Awake() {
         gameObject.name = "Kiln " + gameObject.GetInstanceID();
         inventory       = new Inventory(1);
-        _portUp         = new DevicePort(Keywords.Names.PORT_TYPE_REQUESTER);
+        _portUp         = new DevicePort(this, Keywords.Names.PORT_TYPE_REQUESTER);
+        print(gameObject.name + " is Awake");
     }
 
     protected override void Start() {
